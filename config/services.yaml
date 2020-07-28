@@ -4,6 +4,40 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.providers:
+        rabotaaz:
+            service: App\Service\Spotter\RabotaAz\RabotaAzSpotterService
+            hasCategories: true
+            hasFilters: true
+            urls:
+                base: 'https://www.rabota.az'
+                daily:
+                    all: 'https://www.rabota.az/vacancy/search?created=1&sortby=2'
+                    categories:
+                        it: 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=6'
+                        design: 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=21'
+                weekly:
+                    all: 'https://www.rabota.az/vacancy/search?created=7&sortby=2'
+                    categories:
+                        it: 'https://www.rabota.az/vacancy/search?created=7&sortby=2&category%%5B%%5D=6'
+                        design: 'https://www.rabota.az/vacancy/search?created=7&sortby=2&category%%5B%%5D=21'
+
+        jobsearch:
+            service: App\Service\Spotter\Jobsearch\JobsearchSpotterService
+            hasCategories: false
+            hasFilters: false
+            urls:
+                base: 'https://jobsearch.az'
+        bossaz:
+            service: App\Service\Spotter\Bossaz\BossazSpotterService
+            hasCategories: true
+            hasFilters: false
+            urls:
+                base: 'https://en.boss.az'
+                all: 'https://en.boss.az/vacancies'
+                categories:
+                    it: 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=38'
+                    design: 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=43'
 
 services:
     # default configuration for services in *this* file
