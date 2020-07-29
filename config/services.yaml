@@ -38,6 +38,16 @@ parameters:
                 categories:
                     it: 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=38'
                     design: 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=43'
+        projobs:
+            service: App\Service\Spotter\Projobs\ProjobsSpotterService
+            hasCategories: true
+            hasFilters: false
+            urls:
+                base: 'https://projobs.az/jobdetails'
+                all: 'https://core.projobs.az/v1/vacancies'
+                categories:
+                    it: 'https://core.projobs.az/v1/vacancies?category=17'
+                    design: 'https://core.projobs.az/v1/vacancies?category=36'
 
 services:
     # default configuration for services in *this* file
