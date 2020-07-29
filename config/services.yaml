@@ -6,7 +6,7 @@
 parameters:
     app.providers:
         rabotaaz:
-            service: App\Service\Spotter\RabotaAz\RabotaAzSpotterService
+            service: App\Service\Spotter\RabotaAz\RabotaazSpotterService
             hasCategories: true
             hasFilters: true
             urls:

@@ -4,7 +4,7 @@ namespace App\Command;
 
 use App\Service\Spotter\Bossaz\BossazSpotterService;
 use App\Service\Spotter\Jobsearch\JobsearchSpotterService;
-use App\Service\Spotter\RabotaAz\RabotaAzSpotterService;
+use App\Service\Spotter\Rabotaaz\RabotaazSpotterService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,7 +36,7 @@ class SpotterSpotCommand extends Command implements ServiceSubscriberInterface
     {
         return
             [
-                RabotaAzSpotterService::class,
+                RabotaazSpotterService::class,
                 JobsearchSpotterService::class,
                 BossazSpotterService::class,
             ];

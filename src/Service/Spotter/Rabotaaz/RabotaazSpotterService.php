@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service\Spotter\RabotaAz;
+namespace App\Service\Spotter\Rabotaaz;
 
 use App\Service\Spotter\AbstractSpotterService;
 use Goutte\Client;
 
-class RabotaAzSpotterService extends AbstractSpotterService
+class RabotaazSpotterService extends AbstractSpotterService
 {
     public function spot(string $url, int $timestamp): array
     {
