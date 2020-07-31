@@ -29,8 +29,7 @@ class ProjobsScraperService extends AbstractScraperService
         foreach ($vacancies as $vacancy) {
             $created_at = strtotime($vacancy['createdAt']) + date('Z');
             if ($created_at > $timestamp) {
-                $id = $vacancy['id'];
-                $links[] = self::WEB_URL."/$id";
+                $links[] = $this->makeWebUrl($vacancy['id']);
             }
         }
 
@@ -43,26 +42,37 @@ class ProjobsScraperService extends AbstractScraperService
 
         $vacancies = [];
         foreach ($urls as $url) {
-            $url_parts = explode('/', $url);
-            $id = end($url_parts);
-            $url = self::API_URL."/$id";
+            $url = $this->makeApiUrl($url);
 
             $client->request('GET', $url);
             $content = json_decode($client->getResponse()->getContent(), true);
-            $content = $content['data'];
+            $data = $content['data'];
 
             $vacancy = new Vacancy();
 
-            $vacancy->setTitle($content['name']);
-            $vacancy->setCompany($content['companyName']);
-            $vacancy->setDescription($content['description']);
-            $vacancy->setSalary($content['salary'].' '.$content['currency']['name']);
+            $vacancy->setTitle($data['name']);
+            $vacancy->setCompany($data['companyName']);
+            $vacancy->setDescription($data['description']);
+            $vacancy->setSalary($data['salary'].' '.$data['currency']['name']);
             $vacancy->setCategory($category);
-            $vacancy->setUrl(self::WEB_URL.'/'.$content['id']);
+            $vacancy->setUrl($this->makeWebUrl($data['id']));
 
             $vacancies[] = $vacancy;
         }
 
         return $vacancies;
+    }
+
+    private function makeApiUrl($url): string
+    {
+        $url_parts = explode('/', $url);
+        $id = end($url_parts);
+
+        return self::API_URL."/$id";
+    }
+
+    private function makeWebUrl($id): string
+    {
+        return self::WEB_URL."/$id";
     }
 }

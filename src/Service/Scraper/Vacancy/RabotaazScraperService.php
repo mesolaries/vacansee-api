@@ -8,32 +8,21 @@ use Goutte\Client;
 
 class RabotaazScraperService extends AbstractScraperService
 {
-    const URLS = [
-        'base' => 'https://www.rabota.az',
-        'all' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2',
-        'categories' => [
-            'it' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=6',
-            'design' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=21',
-        ],
-    ];
+    const BASE_URL = 'https://www.rabota.az';
 
     /**
      * {@inheritdoc}
      */
     public function spot(string $url, int $timestamp = null): array
     {
-        $url_parts = parse_url($url);
-        $base_url = $url_parts['scheme'].'://'.$url_parts['host'];
-
         $client = new Client();
 
         $crawler = $client->request('GET', $url);
 
         $links = [];
 
-        // Get links
-        $crawler->filter('#vacancy-list a.title-')->each(function ($node) use (&$links, $base_url) {
-            $links[] = $base_url.$node->attr('href');
+        $crawler->filter('#vacancy-list a.title-')->each(function ($node) use (&$links) {
+            $links[] = self::BASE_URL.$node->attr('href');
         });
 
         return $links;

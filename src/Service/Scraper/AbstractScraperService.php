@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractScraperService implements ScraperServiceInterface
 {
-    private $em;
+    private EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -29,11 +29,13 @@ abstract class AbstractScraperService implements ScraperServiceInterface
     abstract public function scrape(array $urls, string $category): array;
 
     /**
-     * @param array  $urls
-     * @param string $entityClassName
-     * @param string $filterBy
+     * Compares URLs against a database and returns filtered URLs list.
      *
-     * @return array
+     * @param array  $urls            URLs list to filter
+     * @param string $entityClassName Entity class name to use for comparison
+     * @param string $filterBy        Entity property to use for comparison
+     *
+     * @return array Filtered URLs
      */
     public function filter(array $urls, string $entityClassName, string $filterBy = 'url')
     {
@@ -42,6 +44,11 @@ abstract class AbstractScraperService implements ScraperServiceInterface
         }));
     }
 
+    /**
+     * Persists a list of entities and flushes.
+     *
+     * @param array $entities A list of entities to persist
+     */
     public function flush(array $entities)
     {
         foreach ($entities as $entity) {

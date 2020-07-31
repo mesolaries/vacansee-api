@@ -5,19 +5,22 @@ namespace App\Service\Scraper;
 interface ScraperServiceInterface
 {
     /**
-     * @param string $url
-     * @param int    $timestamp
+     * Scrapes website's list view and returns URLs which needed to be scraped for detailed info.
      *
-     * @return array
+     * @param string $url       List view URL
+     * @param int    $timestamp Start date to compare with website's data created at date (if present)
+     *
+     * @return array Spotted list of URLs
      */
     public function spot(string $url, int $timestamp): array;
 
     /**
-     * @param array  $urls
+     * Scrapes website's detailed view and returns a list of scraped data.
      *
-     * @param string $category
+     * @param array  $urls     URLs to scrape
+     * @param string $category Website's data category (e.g. it, design and etc.)
      *
-     * @return array
+     * @return array A list of scraped data
      */
     public function scrape(array $urls, string $category): array;
 }

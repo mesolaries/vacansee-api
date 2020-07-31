@@ -16,11 +16,15 @@ class JobsearchScraperService extends AbstractScraperService
 
         $links = [];
 
-        $vacancies = $crawler->filter('table.hotvac')->first()->filter('tr')->nextAll()->reduce(function ($node) use ($timestamp) {
-            $date = $node->filter('td.date_text')->first()->text();
+        $vacancies = $crawler->filter('table.hotvac')
+            ->first()
+            ->filter('tr')
+            ->nextAll()
+            ->reduce(function ($node) use ($timestamp) {
+                $date = $node->filter('td.date_text')->first()->text();
 
-            return strtotime($date) > $timestamp;
-        });
+                return strtotime($date) > $timestamp;
+            });
 
         $vacancies->filter('a.hotv_text')->each(
             function ($node) use (&$links, $url) {
@@ -51,7 +55,6 @@ class JobsearchScraperService extends AbstractScraperService
             $description = $crawler
                 ->evaluate('/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td')
                 ->text();
-
 
             $vacancy = new Vacancy();
 
