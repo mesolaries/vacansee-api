@@ -69,6 +69,16 @@ class JobsearchScraperService extends AbstractScraperService
                 )
                 ->text();
 
+            $date = $crawler
+                ->evaluate(
+                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[3]/td[1]'
+                )
+                ->html();
+            $date = trim(explode('</span>', $date)[1]);
+
+            $datetime = new \DateTime();
+            $datetime->setTimestamp(strtotime($date));
+
             $vacancy = new Vacancy();
 
             $vacancy->setTitle($title);
@@ -76,6 +86,7 @@ class JobsearchScraperService extends AbstractScraperService
             $vacancy->setDescription($description);
             $vacancy->setCategory($category);
             $vacancy->setUrl($url);
+            $vacancy->setCreatedAt($datetime);
 
             $vacancies[] = $vacancy;
         }

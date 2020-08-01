@@ -65,6 +65,15 @@ class BossazScraperService extends AbstractScraperService
             $description = $crawler->filter('.post-cols.post-info')->first()->text();
             $salary = $crawler->filter('.post-salary.salary')->first()->text();
 
+            // Go to the english version of site to take a date
+            $link = $crawler->filter('a.lang-switcher.en')->link();
+            $crawler = $client->click($link);
+
+            $date = $crawler->filter('.bumped_on.params-i-val')->text();
+
+            $datetime = new \DateTime();
+            $datetime->setTimestamp(strtotime($date));
+
             $vacancy = new Vacancy();
 
             $vacancy->setTitle($title);
@@ -73,6 +82,7 @@ class BossazScraperService extends AbstractScraperService
             $vacancy->setSalary($salary);
             $vacancy->setCategory($category);
             $vacancy->setUrl($url);
+            $vacancy->setCreatedAt($datetime);
 
             $vacancies[] = $vacancy;
         }

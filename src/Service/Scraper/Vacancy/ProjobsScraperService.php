@@ -65,6 +65,10 @@ class ProjobsScraperService extends AbstractScraperService
             $content = json_decode($client->getResponse()->getContent(), true);
             $data = $content['data'];
 
+            $created_at = strtotime($data['createdAt']) + date('Z');
+            $datetime = new \DateTime();
+            $datetime->setTimestamp($created_at);
+
             $vacancy = new Vacancy();
 
             $vacancy->setTitle($data['name']);
@@ -73,6 +77,7 @@ class ProjobsScraperService extends AbstractScraperService
             $vacancy->setSalary($data['salary'] . ' ' . $data['currency']['name']);
             $vacancy->setCategory($category);
             $vacancy->setUrl($this->makeWebUrl($data['id']));
+            $vacancy->setCreatedAt($datetime);
 
             $vacancies[] = $vacancy;
         }

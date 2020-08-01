@@ -122,7 +122,7 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
         $count = 0;
 
         foreach ($urls as $category => $url) {
-            $spotted_urls = $scraper->spot($url, strtotime('-30 day'));
+            $spotted_urls = $scraper->spot($url, strtotime('-1 day'));
             $filtered_urls = $scraper->filter($spotted_urls, Vacancy::class);
             $vacancies = $scraper->scrape($filtered_urls, $category);
             $scraper->flush($vacancies);

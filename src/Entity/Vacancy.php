@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=VacancyRepository::class)
  * @ORM\Table(name="vacancies")
- * @ORM\HasLifecycleCallbacks()
  */
 class Vacancy
 {
@@ -141,13 +140,5 @@ class Vacancy
         $this->createdAt = $createdAt;
 
         return $this;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime();
     }
 }
