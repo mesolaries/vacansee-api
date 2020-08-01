@@ -2,10 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Repository\VacancyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiResource(
+ *     collectionOperations={"get"},
+ *     itemOperations={"get"}
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"title": "partial", "company": "partial", "salary": "word_start",
+ *                                 "category": "exact", "url": "partial"})
+ * @ApiFilter(DateFilter::class, properties={"createdAt"})
+ * @ApiFilter(OrderFilter::class, properties={"createdAt"}, arguments={"orderParameterName"="order"})
  * @ORM\Entity(repositoryClass=VacancyRepository::class)
  * @ORM\Table(name="vacancies")
  */
@@ -39,11 +52,6 @@ class Vacancy
     private $category;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $url;
@@ -52,6 +60,11 @@ class Vacancy
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     /**
      * @ORM\Column(type="text", nullable=true)
