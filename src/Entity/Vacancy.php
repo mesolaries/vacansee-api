@@ -53,6 +53,11 @@ class Vacancy
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $descriptionHtml;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +143,18 @@ class Vacancy
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getDescriptionHtml(): ?string
+    {
+        return $this->descriptionHtml;
+    }
+
+    public function setDescriptionHtml(string $descriptionHtml): self
+    {
+        $this->descriptionHtml = $descriptionHtml;
 
         return $this;
     }

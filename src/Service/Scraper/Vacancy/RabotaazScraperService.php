@@ -50,14 +50,16 @@ class RabotaazScraperService extends AbstractScraperService
 
             $title = $crawler->filter('.title-')->first()->text();
             $company = $crawler->filter('.employer-')->first()->filter('b')->text();
-            $description = $crawler->filter('.details-')->first()->text();
             $salary = $crawler->filter('.salary-')->first()->text();
+            $description = $crawler->filter('.details-')->first()->text();
+            $description_html = $crawler->filter('.details-')->first()->html();
 
             $vacancy = new Vacancy();
 
             $vacancy->setTitle($title);
             $vacancy->setCompany($company);
             $vacancy->setDescription($description);
+            $vacancy->setDescriptionHtml($description_html);
             $vacancy->setSalary($salary);
             $vacancy->setCategory($category);
             $vacancy->setUrl($url);

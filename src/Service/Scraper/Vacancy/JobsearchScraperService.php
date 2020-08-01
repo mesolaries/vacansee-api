@@ -69,6 +69,12 @@ class JobsearchScraperService extends AbstractScraperService
                 )
                 ->text();
 
+            $description_html = $crawler
+                ->evaluate(
+                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
+                )
+                ->html();
+
             $date = $crawler
                 ->evaluate(
                     '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[3]/td[1]'
@@ -84,6 +90,7 @@ class JobsearchScraperService extends AbstractScraperService
             $vacancy->setTitle($title);
             $vacancy->setCompany($company);
             $vacancy->setDescription($description);
+            $vacancy->setDescriptionHtml($description_html);
             $vacancy->setCategory($category);
             $vacancy->setUrl($url);
             $vacancy->setCreatedAt($datetime);

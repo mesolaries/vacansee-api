@@ -62,8 +62,9 @@ class BossazScraperService extends AbstractScraperService
 
             $title = $crawler->filter('.post-title')->first()->text();
             $company = $crawler->filter('.post-company')->first()->filter('a')->text();
-            $description = $crawler->filter('.post-cols.post-info')->first()->text();
             $salary = $crawler->filter('.post-salary.salary')->first()->text();
+            $description = $crawler->filter('.post-cols.post-info')->first()->text();
+            $description_html = $crawler->filter('.post-cols.post-info')->first()->html();
 
             // Go to the english version of site to take a date
             $link = $crawler->filter('a.lang-switcher.en')->link();
@@ -79,6 +80,7 @@ class BossazScraperService extends AbstractScraperService
             $vacancy->setTitle($title);
             $vacancy->setCompany($company);
             $vacancy->setDescription($description);
+            $vacancy->setDescriptionHtml($description_html);
             $vacancy->setSalary($salary);
             $vacancy->setCategory($category);
             $vacancy->setUrl($url);
