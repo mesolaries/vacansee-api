@@ -5,9 +5,13 @@ namespace App\Service\Scraper\Vacancy;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
 use Goutte\Client;
+use Symfony\Component\DomCrawler\Crawler;
 
 class BossazScraperService extends AbstractScraperService
 {
+
+    private const BASE_URL = 'https://en.boss.az';
+
     /**
      * {@inheritdoc}
      */
@@ -17,22 +21,37 @@ class BossazScraperService extends AbstractScraperService
 
         $crawler = $client->request('GET', $url);
 
+        $pagination = $crawler->filter('nav.pagination span.next > a');
+
+        $nodes = $crawler->filter('.results-i');
+        $finished = false;
         $links = [];
 
-        $crawler->filter('.results-i')->each(function ($node) use ($client, $timestamp, &$links) {
-            $link = $node->selectLink('Read more')->link();
-
+        foreach ($nodes as $node) {
+            $node = new Crawler($node, self::BASE_URL);
+            $link = $node->filter('a.results-i-link')->link();
             $crawler = $client->click($link);
             $date = $crawler->filter('.bumped_on.params-i-val')->text();
-            if (strtotime($date) > $timestamp) {
-                $link = $crawler->filter('a.lang-switcher.az')->link();
-                $links[] = $client->click($link)->getUri();
+            if (strtotime($date) <= $timestamp) {
+                $finished = true;
+                break;
             }
-        });
+            $link = $crawler->filter('a.lang-switcher.az')->link();
+            $links[] = $client->click($link)->getUri();
+        }
+
+        // If it's the last page, it shouldn't have a pagination link or it may have a special class
+        if ($pagination->count() && !$finished) {
+            $nextPageUrl = $client->click($pagination->link())->getUri();
+            $links = array_merge($links, $this->spot($nextPageUrl, $timestamp));
+        }
 
         return $links;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function scrape(array $urls, string $category): array
     {
         $client = new Client();

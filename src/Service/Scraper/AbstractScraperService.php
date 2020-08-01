@@ -39,9 +39,14 @@ abstract class AbstractScraperService implements ScraperServiceInterface
      */
     public function filter(array $urls, string $entityClassName, string $filterBy = 'url')
     {
-        return array_values(array_filter($urls, function ($v) use ($entityClassName, $filterBy) {
-            return !$this->em->getRepository($entityClassName)->findOneBy([$filterBy => $v]);
-        }));
+        return array_values(
+            array_filter(
+                $urls,
+                function ($v) use ($entityClassName, $filterBy) {
+                    return !$this->em->getRepository($entityClassName)->findOneBy([$filterBy => $v]);
+                }
+            )
+        );
     }
 
     /**

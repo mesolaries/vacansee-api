@@ -28,9 +28,9 @@ parameters:
             urls:
                 base: 'https://projobs.az/jobdetails'
                 categories:
-                    it: 'https://core.projobs.az/v1/vacancies?category=17'
-                    design: 'https://core.projobs.az/v1/vacancies?category=36'
-                    other: 'https://core.projobs.az/v1/vacancies'
+                    it: 'https://core.projobs.az/v1/vacancies?category=17&page=1'
+                    design: 'https://core.projobs.az/v1/vacancies?category=36&page=1'
+                    other: 'https://core.projobs.az/v1/vacancies?page=1'
 
 services:
     # default configuration for services in *this* file

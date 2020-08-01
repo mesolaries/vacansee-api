@@ -22,8 +22,8 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
 {
     protected static $defaultName = 'app:scrape:vacancy';
 
-    private $container;
-    private $parameters;
+    private ContainerInterface $container;
+    private ParameterBagInterface $parameters;
 
     public function __construct(ContainerInterface $container, ParameterBagInterface $parameters, string $name = null)
     {
@@ -62,52 +62,73 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
     protected function configure()
     {
         $this
-            ->setDescription('Spot new vacancies from available providers')
-            ->addOption('provider', 'p', InputOption::VALUE_REQUIRED, "Spot vacancies only from this provider.\n See available providers in service parameters")
-        ;
+            ->setDescription('Scrape new vacancies and save them to database.')
+            ->addOption(
+                'provider',
+                'p',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                "Scrape only this vacancy provider.\n Choose from: [" .
+                implode(', ', array_keys(self::getSubscribedServices())) .
+                ']',
+                array_keys(self::getSubscribedServices())
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $provider_option = $input->getOption('provider');
+        $provider = $input->getOption('provider');
 
-        if ($provider_option) {
-            $io->note(sprintf('You passed a provider option: %s', $provider_option));
+        $services = array_intersect_key(self::getSubscribedServices(), array_flip($provider));
 
-            try {
-                $scraper = $this->get($provider_option);
-                $providers = $this->parameters->get('app.vacancy.providers');
-                $listUrlsByCategory = $providers[$provider_option]['urls']['categories'];
-
-                foreach ($listUrlsByCategory as $category => $url) {
-                    $urls = $scraper->filter($scraper->spot($url, strtotime('-1 day')), Vacancy::class);
-                    $vacancies = $scraper->scrape($urls, $category);
-                    $scraper->flush($vacancies);
-                }
-                // Implement
-            } catch (\Throwable $t) {
-                throw new InvalidOptionException($t->getMessage());
-            }
-        } else {
-            foreach (self::getSubscribedServices() as $id => $service) {
-                /** @var AbstractScraperService $scraper */
-                $scraper = $this->get($id);
-                $providers = $this->parameters->get('app.vacancy.providers');
-                $listUrlsByCategory = $providers[$id]['urls']['categories'];
-
-                foreach ($listUrlsByCategory as $category => $url) {
-                    $urls = $scraper->filter($scraper->spot($url, strtotime('-1 day')), Vacancy::class);
-                    $vacancies = $scraper->scrape($urls, $category);
-                    $scraper->flush($vacancies);
-                }
-            }
+        if (!count($services)) {
+            throw new InvalidOptionException(
+                "The provider(s) you've entered are invalid. Please, choose from: [" .
+                implode(', ', array_keys(self::getSubscribedServices())) .
+                ']'
+            );
         }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->writeln("Give me a moment. I'm scraping...");
+
+        $scraping_start_time = time();
+
+        $count = 0;
+        foreach ($services as $id => $service) {
+            $count += $this->scrape($id);
+        }
+
+        $scraping_end_time = time();
+
+        $io->success("Success! Added $count new vacancies.");
+        $io->note("Scraping took " . ($scraping_end_time - $scraping_start_time) . " seconds.");
 
         return 0;
     }
 
+    /**
+     * @param $serviceId
+     *
+     * @return int
+     */
+    private function scrape($serviceId)
+    {
+        /** @var AbstractScraperService $scraper */
+        $scraper = $this->get($serviceId);
+        $parameters = $this->parameters->get('app.vacancy.providers');
+        $urls = $parameters[$serviceId]['urls']['categories'];
+
+        $count = 0;
+
+        foreach ($urls as $category => $url) {
+            $spotted_urls = $scraper->spot($url, strtotime('-30 day'));
+            $filtered_urls = $scraper->filter($spotted_urls, Vacancy::class);
+            $vacancies = $scraper->scrape($filtered_urls, $category);
+            $scraper->flush($vacancies);
+            $count += count($filtered_urls);
+        }
+
+        return $count;
+    }
 }

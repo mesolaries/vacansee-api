@@ -8,7 +8,7 @@ use Goutte\Client;
 
 class RabotaazScraperService extends AbstractScraperService
 {
-    const BASE_URL = 'https://www.rabota.az';
+    private const BASE_URL = 'https://www.rabota.az';
 
     /**
      * {@inheritdoc}
@@ -19,11 +19,21 @@ class RabotaazScraperService extends AbstractScraperService
 
         $crawler = $client->request('GET', $url);
 
+        $pagination = $crawler->filter('a.lb-orange-item.next');
+
         $links = [];
 
-        $crawler->filter('#vacancy-list a.title-')->each(function ($node) use (&$links) {
-            $links[] = self::BASE_URL.$node->attr('href');
-        });
+        $crawler->filter('#vacancy-list a.title-')->each(
+            function ($node) use (&$links) {
+                $links[] = self::BASE_URL . $node->attr('href');
+            }
+        );
+
+        // If it's the last page, it shouldn't have a pagination link or it may have a special class
+        if ($pagination->count()) {
+            $nextPageUrl = $client->click($pagination->link())->getUri();
+            $links = array_merge($links, $this->spot($nextPageUrl, $timestamp));
+        }
 
         return $links;
     }
