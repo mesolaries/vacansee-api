@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vacansee{% endblock %}
+
+{% block body %}
+
+
+    <section class="form-26">
+        <div class="form-26-mian">
+            <div class="layer">
+                {% for flashError in app.flashes('verify_email_error') %}
+                    <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+                {% endfor %}
+                {% for flashSuccess in app.flashes('success') %}
+                    <div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
+                {% endfor %}
+                <nav class="navbar navbar-expand-lg navbar-dark">
+                    <!-- Image and text -->
+                    <nav class="navbar navbar-dark">
+                        <a class="navbar-brand" href="#">
+                            <img src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" width="30"
+                                 height="30" class="d-inline-block align-top" alt="">
+                            Vacansee
+                        </a>
+                    </nav>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Docs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Donate</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fab fa-github fa-lg"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fab fa-telegram fa-lg"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="form-inner-cont">
+                    <div class="forms-26-info">
+                        <h2>All jobs in one database</h2>
+                        <p>We collect all available jobs in Azerbaijan into one place. Our database updates every day.
+                            So you'll
+                            always get fresh job listings. We provide free API access to our database. Just use email
+                            address to get your API Key</p>
+                    </div>
+                    <div class="form-right-inf mx-2">
+                        {{ form_start(registrationForm) }}
+                        {{ form_row(registrationForm.email) }}
+
+                        <button type="submit" class="btn">Get an API Key</button>
+                        {{ form_end(registrationForm) }}
+                        {#                        <h6 class="already"> Dont have an account? <a#}
+                        {#                                    href="register.html"><span>Register Here<span></span></span></a></h6>#}
+
+                    </div>
+                    <div class="copyright text-center">
+                        <p>© {{ "now"|date("Y") }} Vacansee. All rights reserved | Design by <a
+                                    href="http://w3layouts.com/"
+                                    target="_blank">W3Layouts</a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
