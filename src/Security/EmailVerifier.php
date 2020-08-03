@@ -68,6 +68,8 @@ class EmailVerifier
 
         $user->setApiKey($apiKey);
 
+        $user->setRoles(['ROLE_ALLOWED']);
+
         // encode the plain password
         $user->setPassword(
             $this->passwordEncoder->encodePassword(
