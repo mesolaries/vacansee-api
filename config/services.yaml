@@ -4,33 +4,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    app.vacancy.providers:
-        rabotaaz:
-            urls:
-                base: 'https://www.rabota.az'
-                categories:
-                    it: 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=6'
-                    design: 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=21'
-                    other: 'https://www.rabota.az/vacancy/search?created=1&sortby=2'
-        jobsearch:
-            urls:
-                base: 'https://jobsearch.az'
-                categories:
-                    jobsearch: 'https://jobsearch.az'
-        bossaz:
-            urls:
-                base: 'https://en.boss.az'
-                categories:
-                    it: 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=38'
-                    design: 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=43'
-                    other: 'https://en.boss.az/vacancies'
-        projobs:
-            urls:
-                base: 'https://projobs.az/jobdetails'
-                categories:
-                    it: 'https://core.projobs.az/v1/vacancies?category=17&page=1'
-                    design: 'https://core.projobs.az/v1/vacancies?category=36&page=1'
-                    other: 'https://core.projobs.az/v1/vacancies?page=1'
 
 services:
     # default configuration for services in *this* file
@@ -56,3 +29,23 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+#    _instanceof:
+#        App\Service\Scraper\ScraperServiceInterface:
+#            tags: ['app.scrapers']
+
+    app.scraper.bossaz:
+        class: App\Service\Scraper\Providers\BossazScraperService
+        tags:
+            - { name: 'app.scrapers', alias: 'bossaz' }
+    app.scraper.rabotaaz:
+        class: App\Service\Scraper\Providers\RabotaazScraperService
+        tags:
+            - { name: 'app.scrapers', alias: 'rabotaaz' }
+    app.scraper.jobsearch:
+        class: App\Service\Scraper\Providers\JobsearchScraperService
+        tags:
+            - { name: 'app.scrapers', alias: 'jobsearch' }
+    app.scraper.projobs:
+        class: App\Service\Scraper\Providers\ProjobsScraperService
+        tags:
+            - { name: 'app.scrapers', alias: 'projobs' }

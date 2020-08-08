@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Scraper\Vacancy;
+namespace App\Service\Scraper\Providers;
 
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
@@ -9,6 +9,12 @@ use Goutte\Client;
 class RabotaazScraperService extends AbstractScraperService
 {
     private const BASE_URL = 'https://www.rabota.az';
+
+    protected const CATEGORIES_URLS = [
+        'it' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=6',
+        'design' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=21',
+        'other' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2',
+    ];
 
     /**
      * {@inheritdoc}

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Scraper\Vacancy;
+namespace App\Service\Scraper\Providers;
 
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
@@ -10,6 +10,12 @@ class ProjobsScraperService extends AbstractScraperService
 {
     private const WEB_URL = 'https://projobs.az/jobdetails';
     private const API_URL = 'https://core.projobs.az/v1/vacancies';
+
+    protected const CATEGORIES_URLS = [
+        'it' => 'https://core.projobs.az/v1/vacancies?category=17&page=1',
+        'design' => 'https://core.projobs.az/v1/vacancies?category=36&page=1',
+        'other' => 'https://core.projobs.az/v1/vacancies?page=1',
+    ];
 
     private int $page = 1;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Scraper\Vacancy;
+namespace App\Service\Scraper\Providers;
 
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
@@ -10,6 +10,10 @@ use Symfony\Component\DomCrawler\Crawler;
 class JobsearchScraperService extends AbstractScraperService
 {
     private const BASE_URL = 'https://jobsearch.az';
+
+    protected const CATEGORIES_URLS = [
+        'jobsearch' => 'https://jobsearch.az',
+    ];
 
     /**
      * {@inheritDoc}

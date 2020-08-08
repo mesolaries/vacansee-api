@@ -6,6 +6,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractScraperService implements ScraperServiceInterface
 {
+    protected const CATEGORIES_URLS = [];
+
     private EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -16,6 +18,11 @@ abstract class AbstractScraperService implements ScraperServiceInterface
     public function getEntityManager()
     {
         return $this->em;
+    }
+
+    public function getCategoriesUrls()
+    {
+        return $this::CATEGORIES_URLS;
     }
 
     /**

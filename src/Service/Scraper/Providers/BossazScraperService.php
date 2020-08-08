@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Scraper\Vacancy;
+namespace App\Service\Scraper\Providers;
 
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
@@ -9,8 +9,13 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class BossazScraperService extends AbstractScraperService
 {
-
     private const BASE_URL = 'https://en.boss.az';
+
+    protected const CATEGORIES_URLS = [
+        'it' => 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=38',
+        'design' => 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=43',
+        'other' => 'https://en.boss.az/vacancies',
+    ];
 
     /**
      * {@inheritdoc}

@@ -4,59 +4,27 @@ namespace App\Command;
 
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
-use App\Service\Scraper\Vacancy\BossazScraperService;
-use App\Service\Scraper\Vacancy\JobsearchScraperService;
-use App\Service\Scraper\Vacancy\ProjobsScraperService;
-use App\Service\Scraper\Vacancy\RabotaazScraperService;
-use Psr\Container\ContainerInterface;
+use App\Service\Scraper\ScraperChainService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
+class ScrapeVacancyCommand extends Command
 {
     protected static $defaultName = 'app:scrape:vacancy';
 
-    private ContainerInterface $container;
-    private ParameterBagInterface $parameters;
+    private ScraperChainService $chain;
 
-    public function __construct(ContainerInterface $container, ParameterBagInterface $parameters, string $name = null)
+    // Data published interval (-1 day = Scrape data published today)
+    private const INTERVAL = '-1 day';
+
+    public function __construct(ScraperChainService $chain, string $name = null)
     {
+        $this->chain = $chain;
         parent::__construct($name);
-        $this->container = $container;
-        $this->parameters = $parameters;
-    }
-
-    public static function getSubscribedServices()
-    {
-        return [
-            'bossaz' => BossazScraperService::class,
-            'jobsearch' => JobsearchScraperService::class,
-            'rabotaaz' => RabotaazScraperService::class,
-            'projobs' => ProjobsScraperService::class,
-        ];
-    }
-
-    protected function has(string $id): bool
-    {
-        return $this->container->has($id);
-    }
-
-    /**
-     * Gets a container service by its id.
-     *
-     * @param string $id
-     *
-     * @return object The service
-     */
-    protected function get(string $id): object
-    {
-        return $this->container->get($id);
     }
 
     protected function configure()
@@ -67,10 +35,9 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
                 'provider',
                 'p',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                "Scrape only this vacancy provider.\n Choose from: [" .
-                implode(', ', array_keys(self::getSubscribedServices())) .
-                ']',
-                array_keys(self::getSubscribedServices())
+                "Scrape only this vacancy provider.\n" .
+                "Choose from: [" . implode(', ', array_keys($this->chain->getScrapers())) . "]",
+                array_keys($this->chain->getScrapers())
             );
     }
 
@@ -80,12 +47,12 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
 
         $provider = $input->getOption('provider');
 
-        $services = array_intersect_key(self::getSubscribedServices(), array_flip($provider));
+        $services = array_intersect_key($this->chain->getScrapers(), array_flip($provider));
 
         if (!count($services)) {
             throw new InvalidOptionException(
                 "The provider(s) you've entered are invalid. Please, choose from: [" .
-                implode(', ', array_keys(self::getSubscribedServices())) .
+                implode(', ', array_keys($this->chain->getScrapers())) .
                 ']'
             );
         }
@@ -95,8 +62,8 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
         $scraping_start_time = time();
 
         $count = 0;
-        foreach ($services as $id => $service) {
-            $count += $this->scrape($id);
+        foreach ($services as $alias => $service) {
+            $count += $this->scrape($alias);
         }
 
         $scraping_end_time = time();
@@ -108,21 +75,21 @@ class ScrapeVacancyCommand extends Command implements ServiceSubscriberInterface
     }
 
     /**
-     * @param $serviceId
+     * @param $alias
      *
      * @return int
      */
-    private function scrape($serviceId)
+    private function scrape($alias)
     {
         /** @var AbstractScraperService $scraper */
-        $scraper = $this->get($serviceId);
-        $parameters = $this->parameters->get('app.vacancy.providers');
-        $urls = $parameters[$serviceId]['urls']['categories'];
+        $scraper = $this->chain->getScraper($alias);
+
+        $urls = $scraper->getCategoriesUrls();
 
         $count = 0;
 
         foreach ($urls as $category => $url) {
-            $spotted_urls = $scraper->spot($url, strtotime('-1 day'));
+            $spotted_urls = $scraper->spot($url, strtotime(self::INTERVAL));
             $filtered_urls = $scraper->filter($spotted_urls, Vacancy::class);
             $vacancies = $scraper->scrape($filtered_urls, $category);
             $scraper->flush($vacancies);
