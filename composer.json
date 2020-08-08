@@ -34,7 +34,6 @@
         "symfonycasts/verify-email-bundle": "^1.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
         "symfony/maker-bundle": "^1.20",
         "symfony/stopwatch": "^5.1",
         "symfony/twig-bundle": "^5.1",
@@ -61,6 +60,7 @@
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php74": "*",
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php71": "*",
         "symfony/polyfill-php70": "*",
