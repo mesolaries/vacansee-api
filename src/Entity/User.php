@@ -155,14 +155,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime();
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -173,5 +165,13 @@ class User implements UserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
     }
 }
