@@ -2,6 +2,8 @@
 
 namespace App\Service\Scraper;
 
+use App\Entity\Category;
+
 interface ScraperServiceInterface
 {
     /**
@@ -17,10 +19,10 @@ interface ScraperServiceInterface
     /**
      * Scrapes website's detailed view and returns a list of scraped data.
      *
-     * @param array  $urls     URLs to scrape
-     * @param string $category Website's data category (e.g. it, design and etc.)
+     * @param array    $urls     URLs to scrape
+     * @param Category $category Website's data category (e.g. it, design and etc.)
      *
      * @return array A list of scraped data
      */
-    public function scrape(array $urls, string $category): array;
+    public function scrape(array $urls, Category $category): array;
 }

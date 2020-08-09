@@ -1,4 +1,43 @@
 api_platform:
+    title: 'Vacansee API'
+    description: 'All vacancies in one place'
+    version: '1.0.0'
+
+    collection:
+        # The name of the query parameter to filter nullable results (with the ExistsFilter).
+        exists_parameter_name: 'exists'
+
+        # The default order of results.
+        order: 'DESC'
+
+        # The name of the query parameter to order results (with the OrderFilter).
+        order_parameter_name: 'order'
+
+        pagination:
+            # To enable or disable pagination for all resource collections by default.
+            enabled: true
+
+            # To allow partial pagination for all resource collections.
+            # This improves performances by skipping the `COUNT` query.
+            partial: false
+
+            # The default number of items per page.
+            items_per_page: 30
+
+            # The default name of the parameter handling the page number.
+            page_parameter_name: 'page'
+
+    # The list of enabled formats. The first one will be the default.
+    formats:
+        json:
+            mime_types: ['application/json']
+
+        jsonld:
+            mime_types: ['application/ld+json']
+
+        html:
+            mime_types: ['text/html']
+
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:

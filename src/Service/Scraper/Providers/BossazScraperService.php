@@ -2,6 +2,7 @@
 
 namespace App\Service\Scraper\Providers;
 
+use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
 use Goutte\Client;
@@ -57,7 +58,7 @@ class BossazScraperService extends AbstractScraperService
     /**
      * {@inheritdoc}
      */
-    public function scrape(array $urls, string $category): array
+    public function scrape(array $urls, Category $category): array
     {
         $client = new Client();
 
@@ -68,6 +69,7 @@ class BossazScraperService extends AbstractScraperService
             $title = $crawler->filter('.post-title')->first()->text();
             $company = $crawler->filter('.post-company')->first()->filter('a')->text();
             $salary = $crawler->filter('.post-salary.salary')->first()->text();
+            $salary = (int)$salary ? $salary : null;
             $description = $crawler->filter('.post-cols.post-info')->first()->text();
             $description_html = $crawler->filter('.post-cols.post-info')->first()->html();
 

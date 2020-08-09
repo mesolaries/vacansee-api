@@ -2,6 +2,7 @@
 
 namespace App\Service\Scraper;
 
+use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractScraperService implements ScraperServiceInterface
@@ -33,7 +34,7 @@ abstract class AbstractScraperService implements ScraperServiceInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function scrape(array $urls, string $category): array;
+    abstract public function scrape(array $urls, Category $category): array;
 
     /**
      * Compares URLs against a database and returns filtered URLs list.

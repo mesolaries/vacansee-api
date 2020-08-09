@@ -2,9 +2,11 @@
 
 namespace App\Service\Scraper\Providers;
 
+use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
 use Goutte\Client;
+use Symfony\Component\DomCrawler\Crawler;
 
 class RabotaazScraperService extends AbstractScraperService
 {
@@ -47,7 +49,7 @@ class RabotaazScraperService extends AbstractScraperService
     /**
      * {@inheritdoc}
      */
-    public function scrape(array $urls, string $category): array
+    public function scrape(array $urls, Category $category): array
     {
         $client = new Client();
         $vacancies = [];
@@ -57,8 +59,23 @@ class RabotaazScraperService extends AbstractScraperService
             $title = $crawler->filter('.title-')->first()->text();
             $company = $crawler->filter('.employer-')->first()->filter('b')->text();
             $salary = $crawler->filter('.salary-')->first()->text();
-            $description = $crawler->filter('.details-')->first()->text();
-            $description_html = $crawler->filter('.details-')->first()->html();
+            $salary = (int)$salary ? $salary : null;
+
+            // Remove child node from description with similar vacancies
+            $crawler->filter('.details-')->children()->each(
+                function (Crawler $crawler) {
+                    foreach ($crawler as $node) {
+                        if ($crawler->matches('.similar-vac-list')) {
+                            $node->parentNode->removeChild($node);
+                        }
+                    }
+                }
+            );
+
+            $description_node = $crawler->filter('.details-')->first();
+
+            $description = $description_node->text();
+            $description_html = $description_node->html();
 
             $vacancy = new Vacancy();
 

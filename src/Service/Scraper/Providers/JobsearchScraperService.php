@@ -2,6 +2,7 @@
 
 namespace App\Service\Scraper\Providers;
 
+use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
 use Goutte\Client;
@@ -46,7 +47,7 @@ class JobsearchScraperService extends AbstractScraperService
     /**
      * {@inheritDoc}
      */
-    public function scrape(array $urls, string $category): array
+    public function scrape(array $urls, Category $category): array
     {
         $client = new Client();
         $vacancies = [];

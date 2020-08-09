@@ -2,9 +2,11 @@
 
 namespace App\Command;
 
+use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
 use App\Service\Scraper\ScraperChainService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,18 +14,21 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ScrapeVacancyCommand extends Command
+class ScraperScrapeCommand extends Command
 {
-    protected static $defaultName = 'app:scrape:vacancy';
+    protected static $defaultName = 'app:scraper:scrape';
 
     private ScraperChainService $chain;
+
+    private EntityManagerInterface $em;
 
     // Data published interval (-1 day = Scrape data published today)
     private const INTERVAL = '-1 day';
 
-    public function __construct(ScraperChainService $chain, string $name = null)
+    public function __construct(ScraperChainService $chain, EntityManagerInterface $em, string $name = null)
     {
         $this->chain = $chain;
+        $this->em = $em;
         parent::__construct($name);
     }
 
@@ -63,7 +68,7 @@ class ScrapeVacancyCommand extends Command
 
         $count = 0;
         foreach ($services as $alias => $service) {
-            $count += $this->scrape($alias);
+            $count += $this->scrape($alias, $io);
         }
 
         $scraping_end_time = time();
@@ -75,11 +80,13 @@ class ScrapeVacancyCommand extends Command
     }
 
     /**
-     * @param $alias
+     * @param string       $alias
+     *
+     * @param SymfonyStyle $io
      *
      * @return int
      */
-    private function scrape($alias)
+    private function scrape(string $alias, SymfonyStyle $io)
     {
         /** @var AbstractScraperService $scraper */
         $scraper = $this->chain->getScraper($alias);
@@ -88,7 +95,22 @@ class ScrapeVacancyCommand extends Command
 
         $count = 0;
 
-        foreach ($urls as $category => $url) {
+        foreach ($urls as $categorySlug => $url) {
+            if (!array_key_exists($categorySlug, Vacancy::getCategories())) {
+                continue;
+            }
+
+            $categoryRepository = $this->em->getRepository(Category::class);
+            /** @var Category|null $category */
+            $category = $categoryRepository->findOneBy(['slug' => $categorySlug]);
+
+            if (!$category) {
+                $io->warning(
+                    "$categorySlug not found in Category entity. Did you forget to sync? (Run app:sync:categories)"
+                );
+                continue;
+            }
+
             $spotted_urls = $scraper->spot($url, strtotime(self::INTERVAL));
             $filtered_urls = $scraper->filter($spotted_urls, Vacancy::class);
             $vacancies = $scraper->scrape($filtered_urls, $category);
