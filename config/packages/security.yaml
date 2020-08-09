@@ -15,9 +15,17 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         api:
-            pattern: ^/api/
+            pattern: ^/api
             provider: app_user_provider
             anonymous: true
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
+        admin:
+            pattern: ^/admin
+            provider: app_user_provider
+            anonymous: false
             stateless: true
             guard:
                 authenticators:
@@ -37,6 +45,7 @@ security:
     access_control:
          - { path: '^/api/docs', roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: '^/api', roles: ROLE_ALLOWED }
+         - { path: '^/admin', roles: ROLE_ADMIN }
 
     role_hierarchy:
         ROLE_ALLOWED: ROLE_USER

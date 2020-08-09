@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
-use Ramsey\Uuid\Uuid;
 use Swift_Mailer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\WrongEmailVerifyException;
 
@@ -27,7 +25,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/", name="app_home")
+     * @Route("/", name="app.home")
      * @param Request      $request
      *
      * @param Swift_Mailer $mailer
@@ -66,7 +64,6 @@ class HomeController extends AbstractController
                         'user_exists_info',
                         "We've a user with this email. If it's you and you forgot your API Key, please check your email."
                     );
-
                 }
             } else {
                 $entityManager = $doctrine->getManager();
@@ -99,7 +96,7 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/verify/email", name="app_verify_email")
-     * @param Request                      $request
+     * @param Request $request
      *
      * @return Response
      */
@@ -117,12 +114,12 @@ class HomeController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app.home');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app.home');
     }
 }
