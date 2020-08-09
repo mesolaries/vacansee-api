@@ -43,16 +43,11 @@ class CreateAdminCommand extends Command
         $email = $helper->ask($input, $output, $question);
 
         if ($this->em->getRepository(User::class)->findOneBy(['email' => $email])) {
-            throw new \Exception('There is already a user with this email');
+            throw new \Exception('There is already a user with this email.');
         }
 
-        $question = new Question('Set a password for admin user: ');
-        $question->setHidden(true);
-        $question->setHiddenFallback(false);
-
-        $password = $helper->ask($input, $output, $question);
-
         $apikey = Uuid::uuid1();
+        $password = $apikey;
 
         $user = new User();
         $user->setEmail($email);

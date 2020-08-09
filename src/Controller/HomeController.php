@@ -64,6 +64,8 @@ class HomeController extends AbstractController
                         'user_exists_info',
                         "We've a user with this email. If it's you and you forgot your API Key, please check your email."
                     );
+
+                    return $this->redirectToRoute('app.home');
                 }
             } else {
                 $entityManager = $doctrine->getManager();
@@ -83,7 +85,12 @@ class HomeController extends AbstractController
             );
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('api_doc');
+            $this->addFlash(
+                'success',
+                "We've sent confirmation email to your email address. Please, confirm your email."
+            );
+
+            return $this->redirectToRoute('app.home');
         }
 
         return $this->render(
@@ -96,11 +103,13 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/verify/email", name="app_verify_email")
-     * @param Request $request
+     * @param Request      $request
+     *
+     * @param Swift_Mailer $mailer
      *
      * @return Response
      */
-    public function verifyUserEmail(Request $request): Response
+    public function verifyUserEmail(Request $request, \Swift_Mailer $mailer): Response
     {
         $email = $request->query->get('email');
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -117,8 +126,21 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app.home');
         }
 
+        $message = (new \Swift_Message('Vacansee API Key'))
+            ->setFrom('mnf.emil@gmail.com', 'Vacansee')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->renderView(
+                    'registration/apikey_email.html.twig',
+                    ['apikey' => $user->getApiKey()]
+                ),
+                'text/html'
+            );
+
+        $mailer->send($message);
+
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', "You've confirmed your email address. Check your email again to get your API Key");
 
         return $this->redirectToRoute('app.home');
     }
