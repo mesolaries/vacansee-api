@@ -48,11 +48,6 @@ class User implements UserInterface
      */
     private $createdAt;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isVerified = false;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -77,7 +72,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->apiKey;
+        return (string)$this->apiKey;
     }
 
     /**
@@ -104,7 +99,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -151,18 +146,6 @@ class User implements UserInterface
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }

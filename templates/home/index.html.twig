@@ -8,12 +8,19 @@
     <section class="form-26">
         <div class="form-26-mian">
             <div class="layer">
-                {% for flashError in app.flashes('verify_email_error') %}
+
+                {% for flashError in app.flashes('error') %}
                     <div class="alert alert-danger" role="alert">{{ flashError }}</div>
                 {% endfor %}
+
+                {% for flashInfo in app.flashes('info') %}
+                    <div class="alert alert-info" role="alert">{{ flashInfo }}</div>
+                {% endfor %}
+
                 {% for flashSuccess in app.flashes('success') %}
                     <div class="alert alert-success" role="alert">{{ flashSuccess }}</div>
                 {% endfor %}
+
                 <nav class="navbar navbar-expand-lg navbar-dark">
                     <!-- Image and text -->
                     <nav class="navbar navbar-dark">
@@ -62,8 +69,7 @@
 
                         <button type="submit" class="btn">Get an API Key</button>
                         {{ form_end(registrationForm) }}
-                        {#                        <h6 class="already"> Dont have an account? <a#}
-                        {#                                    href="register.html"><span>Register Here<span></span></span></a></h6>#}
+                        <h6>We'll send API key to this email</h6>
 
                     </div>
                     <div class="copyright text-center">

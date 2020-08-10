@@ -4,35 +4,39 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
-use Swift_Mailer;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Service\Email\SendEmail;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\WrongEmailVerifyException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class HomeController extends AbstractController
 {
-    private $emailVerifier;
+    private SendEmail $email;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    private UserPasswordEncoderInterface $encoder;
+
+    public function __construct(SendEmail $email, UserPasswordEncoderInterface $encoder)
     {
-        $this->emailVerifier = $emailVerifier;
+        $this->email = $email;
+        $this->encoder = $encoder;
     }
 
     /**
      * @Route("/", name="app.home")
-     * @param Request      $request
-     *
-     * @param Swift_Mailer $mailer
+     * @param Request $request
      *
      * @return Response
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function register(Request $request, Swift_Mailer $mailer): Response
+    public function home(Request $request): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -42,52 +46,39 @@ class HomeController extends AbstractController
             $doctrine = $this->getDoctrine();
 
             $userRepository = $doctrine->getRepository(User::class);
-            $userExists = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
-            if ($userExists) {
-                $user = $userExists;
-                if ($user->isVerified()) {
-                    $message = (new \Swift_Message('Vacansee'))
-                        ->setFrom('mnf.emil@gmail.com', 'Vacansee')
-                        ->setTo($user->getEmail())
-                        ->setBody(
-                            $this->renderView(
-                                'registration/forgot_apikey_email.html.twig',
-                                ['apikey' => $user->getApiKey()]
-                            ),
-                            'text/html'
-                        );
+            $existingUser = $userRepository->findOneBy(['email' => $user->getEmail()]) ?? $user;
 
-                    $mailer->send($message);
+            // Send user's API key to his email address if user already exists
+            if ($existingUser) {
+                $this->email->sendForgotApikeyMessage(
+                    $existingUser->getEmail(),
+                    ['apikey' => $existingUser->getApiKey()]
+                );
 
-                    $this->addFlash(
-                        'user_exists_info',
-                        "We've a user with this email. If it's you and you forgot your API Key, please check your email."
-                    );
+                $this->addFlash(
+                    'info',
+                    "We've a user with this email. If it's you and you forgot your API key, please check your email."
+                );
 
-                    return $this->redirectToRoute('app.home');
-                }
-            } else {
-                $entityManager = $doctrine->getManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
+                return $this->redirectToRoute('app.home');
             }
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address('mnf.emil@gmail.com', 'Vacansee API'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
+            // Create a new user
+            $user->setApiKey(Uuid::uuid1());
+            $user->setPassword($this->encoder->encodePassword($user, $user->getApiKey()));
+            $user->setRoles(['ROLE_ALLOWED']);
+
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Send new user his new API key
+            $this->email->sendApikeyMessage($user->getEmail(), ['apikey' => $user->getApiKey()]);
 
             $this->addFlash(
                 'success',
-                "We've sent confirmation email to your email address. Please, confirm your email."
+                "We've sent your API key to the email you've specified."
             );
 
             return $this->redirectToRoute('app.home');
@@ -99,49 +90,5 @@ class HomeController extends AbstractController
                 'registrationForm' => $form->createView(),
             ]
         );
-    }
-
-    /**
-     * @Route("/verify/email", name="app_verify_email")
-     * @param Request      $request
-     *
-     * @param Swift_Mailer $mailer
-     *
-     * @return Response
-     */
-    public function verifyUserEmail(Request $request, \Swift_Mailer $mailer): Response
-    {
-        $email = $request->query->get('email');
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $email]);
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            if (!$user) {
-                throw new WrongEmailVerifyException();
-            }
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
-
-            return $this->redirectToRoute('app.home');
-        }
-
-        $message = (new \Swift_Message('Vacansee API Key'))
-            ->setFrom('mnf.emil@gmail.com', 'Vacansee')
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->renderView(
-                    'registration/apikey_email.html.twig',
-                    ['apikey' => $user->getApiKey()]
-                ),
-                'text/html'
-            );
-
-        $mailer->send($message);
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', "You've confirmed your email address. Check your email again to get your API Key");
-
-        return $this->redirectToRoute('app.home');
     }
 }

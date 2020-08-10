@@ -53,7 +53,6 @@ class CreateAdminCommand extends Command
         $user->setEmail($email);
         $user->setPassword($this->encoder->encodePassword($user, $password));
         $user->setRoles(['ROLE_ADMIN']);
-        $user->setIsVerified(true);
         $user->setApiKey($apikey);
 
         $this->em->persist($user);
