@@ -47,7 +47,7 @@ class HomeController extends AbstractController
 
             $userRepository = $doctrine->getRepository(User::class);
 
-            $existingUser = $userRepository->findOneBy(['email' => $user->getEmail()]) ?? $user;
+            $existingUser = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
             // Send user's API key to his email address if user already exists
             if ($existingUser) {
