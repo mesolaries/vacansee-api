@@ -13,8 +13,8 @@ class RabotaazScraperService extends AbstractScraperService
     private const BASE_URL = 'https://www.rabota.az';
 
     protected const CATEGORIES_URLS = [
-        'it' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=6',
-        'design' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%%5B%%5D=21',
+        'it' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=6',
+        'design' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=21',
         'other' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2',
     ];
 

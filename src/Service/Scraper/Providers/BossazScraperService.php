@@ -13,8 +13,8 @@ class BossazScraperService extends AbstractScraperService
     private const BASE_URL = 'https://en.boss.az';
 
     protected const CATEGORIES_URLS = [
-        'it' => 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=38',
-        'design' => 'https://en.boss.az/vacancies?search%%5Bcategory_id%%5D=43',
+        'it' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=38',
+        'design' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=43',
         'other' => 'https://en.boss.az/vacancies',
     ];
 
