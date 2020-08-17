@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(collectionOperations={"get"}, itemOperations={"get"})
+ * @ApiResource(collectionOperations={"get"}, itemOperations={"get"}, attributes={"order"={"id": "ASC"}})
+ * @ApiFilter(OrderFilter::class, properties={"id", "name", "slug"})
+ * @ApiFilter(DateFilter::class, properties={"vacancies.createdAt"})
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @ORM\Table(name="categories")
  */
