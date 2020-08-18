@@ -15,6 +15,14 @@ class RabotaazScraperService extends AbstractScraperService
     protected const CATEGORIES_URLS = [
         'it' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=6',
         'design' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=21',
+        'service' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=120',
+        'marketing' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=4',
+        'administration' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=13',
+        'sales' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=29',
+        'finance' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=1',
+        'medical' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=22',
+        'legal' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=7',
+        'education' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2&category%5B%5D=23',
         'other' => 'https://www.rabota.az/vacancy/search?created=1&sortby=2',
     ];
 

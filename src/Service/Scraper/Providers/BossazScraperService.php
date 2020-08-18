@@ -15,6 +15,14 @@ class BossazScraperService extends AbstractScraperService
     protected const CATEGORIES_URLS = [
         'it' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=38',
         'design' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=43',
+        'service' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=133',
+        'marketing' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=37',
+        'administration' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=44',
+        'sales' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=40',
+        'finance' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=36',
+        'medical' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=138',
+        'legal' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=39',
+        'education' => 'https://en.boss.az/vacancies?search%5Bcategory_id%5D=46',
         'other' => 'https://en.boss.az/vacancies',
     ];
 

@@ -27,9 +27,17 @@ class Vacancy
 {
     private const CATEGORIES = [
         'it' => 'IT',
-        'design' => 'Design',
+        'design' => 'Dizayn',
+        'service' => 'Xidmət',
+        'marketing' => 'Marketinq',
+        'administration' => 'İnzibati',
+        'sales' => 'Satış',
+        'finance' => 'Maliyyə',
+        'medical' => 'Səhiyyə',
+        'legal' => 'Hüquq',
+        'education' => 'Təhsil',
         'jobsearch' => 'Jobsearch',
-        'other' => 'Other',
+        'other' => 'Digər',
     ];
 
     /**

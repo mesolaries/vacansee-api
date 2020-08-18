@@ -15,6 +15,14 @@ class ProjobsScraperService extends AbstractScraperService
     protected const CATEGORIES_URLS = [
         'it' => 'https://core.projobs.az/v1/vacancies?category=17&page=1',
         'design' => 'https://core.projobs.az/v1/vacancies?category=36&page=1',
+        'service' => 'https://core.projobs.az/v1/vacancies?category=61&page=1',
+        'marketing' => 'https://core.projobs.az/v1/vacancies?category=11&page=1',
+        'administration' => 'https://core.projobs.az/v1/vacancies?category=25&page=1',
+        'sales' => 'https://core.projobs.az/v1/vacancies?category=32&page=1',
+        'finance' => 'https://core.projobs.az/v1/vacancies?category=1&page=1',
+        'medical' => 'https://core.projobs.az/v1/vacancies?category=74&page=1',
+        'legal' => 'https://core.projobs.az/v1/vacancies?category=43&page=1',
+        'education' => 'https://core.projobs.az/v1/vacancies?category=48&page=1',
         'other' => 'https://core.projobs.az/v1/vacancies?page=1',
     ];
 
