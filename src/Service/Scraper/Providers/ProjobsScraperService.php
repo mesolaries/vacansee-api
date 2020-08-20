@@ -40,16 +40,20 @@ class ProjobsScraperService extends AbstractScraperService
         $content = json_decode($client->getResponse()->getContent(), true);
 
         $vacancies = $content['data'];
-        $finished = false;
+
         $links = [];
+
+        $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
 
         foreach ($vacancies as $vacancy) {
             $created_at = strtotime($vacancy['createdAt']) + date('Z');
-            if ($created_at <= $timestamp) {
-                $finished = true;
-                break;
+            $link = $this->makeWebUrl($vacancy['id']);
+
+            if ($created_at <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
+                return $links;
             }
-            $links[] = $this->makeWebUrl($vacancy['id']);
+
+            $links[] = $link;
         }
 
 
@@ -57,7 +61,7 @@ class ProjobsScraperService extends AbstractScraperService
         $client->request('GET', $nextPageUrl);
         $nextPageContent = json_decode($client->getResponse()->getContent(), true);
         $vacancies = $nextPageContent['data'];
-        if (count($vacancies) && !$finished) {
+        if (count($vacancies)) {
             $this->page++;
             $links = array_merge($links, $this->spot($nextPageUrl, $timestamp));
         }
@@ -68,37 +72,33 @@ class ProjobsScraperService extends AbstractScraperService
     /**
      * {@inheritDoc}
      */
-    public function scrape(array $urls, Category $category): array
+    public function scrape(string $url, Category $category)
     {
         $client = new Client();
 
-        $vacancies = [];
-        foreach ($urls as $url) {
-            $url = $this->makeApiUrl($url);
+        $url = $this->makeApiUrl($url);
 
-            $client->request('GET', $url);
-            $content = json_decode($client->getResponse()->getContent(), true);
-            $data = $content['data'];
+        $client->request('GET', $url);
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $data = $content['data'];
 
-            $created_at = strtotime($data['createdAt']) + date('Z');
-            $datetime = new \DateTime();
-            $datetime->setTimestamp($created_at);
+        $created_at = strtotime($data['createdAt']) + date('Z');
+        $datetime = new \DateTime();
+        $datetime->setTimestamp($created_at);
 
-            $vacancy = new Vacancy();
+        $vacancy = new Vacancy();
 
-            $vacancy->setTitle($data['name']);
-            $vacancy->setCompany($data['companyName']);
-            $vacancy->setDescription($data['description']);
-            $vacancy->setDescriptionHtml($data['description']);
-            $vacancy->setSalary($data['salary'] . ' ' . $data['currency']['name']);
-            $vacancy->setCategory($category);
-            $vacancy->setUrl($this->makeWebUrl($data['id']));
-            $vacancy->setCreatedAt($datetime);
+        $vacancy->setTitle($data['name']);
+        $vacancy->setCompany($data['companyName']);
+        $vacancy->setDescription($data['description']);
+        $vacancy->setDescriptionHtml($data['description']);
+        $vacancy->setSalary($data['salary'] . ' ' . $data['currency']['name']);
+        $vacancy->setCategory($category);
+        $vacancy->setUrl($this->makeWebUrl($data['id']));
+        $vacancy->setCreatedAt($datetime);
 
-            $vacancies[] = $vacancy;
-        }
-
-        return $vacancies;
+        $this->getEntityManager()->persist($vacancy);
+        $this->getEntityManager()->flush();
     }
 
     private function makeApiUrl($url): string

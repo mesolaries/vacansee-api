@@ -17,12 +17,12 @@ interface ScraperServiceInterface
     public function spot(string $url, int $timestamp): array;
 
     /**
-     * Scrapes website's detailed view and returns a list of scraped data.
+     * Scrapes website's detailed view and flushes to database
      *
-     * @param array    $urls     URLs to scrape
+     * @param string   $urls     URLs to scrape
      * @param Category $category Website's data category (e.g. it, design and etc.)
      *
-     * @return array A list of scraped data
+     * @return mixed
      */
-    public function scrape(array $urls, Category $category): array;
+    public function scrape(string $urls, Category $category);
 }

@@ -37,13 +37,23 @@ class RabotaazScraperService extends AbstractScraperService
 
         $pagination = $crawler->filter('a.lb-orange-item.next');
 
+        $nodes = $crawler->filter('#vacancy-list a.title-');
+
         $links = [];
 
-        $crawler->filter('#vacancy-list a.title-')->each(
-            function ($node) use (&$links) {
-                $links[] = self::BASE_URL . $node->attr('href');
+        $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
+
+        foreach ($nodes as $node) {
+            $node = new Crawler($node, self::BASE_URL);
+
+            $link = self::BASE_URL . $node->attr('href');
+
+            if ($vacancyRepository->findOneBy(['url' => $link])) {
+                return $links;
             }
-        );
+
+            $links[] = $link;
+        }
 
         // If it's the last page, it shouldn't have a pagination link or it may have a special class
         if ($pagination->count()) {
@@ -57,48 +67,45 @@ class RabotaazScraperService extends AbstractScraperService
     /**
      * {@inheritdoc}
      */
-    public function scrape(array $urls, Category $category): array
+    public function scrape(string $url, Category $category)
     {
         $client = new Client();
-        $vacancies = [];
-        foreach ($urls as $url) {
-            $crawler = $client->request('GET', $url);
 
-            $title = $crawler->filter('.title-')->first()->text();
-            $company = $crawler->filter('.employer-')->first()->filter('b')->text();
-            $salary = $crawler->filter('.salary-')->first()->text();
-            $salary = (int)$salary ? $salary : null;
+        $crawler = $client->request('GET', $url);
 
-            // Remove child node from description with similar vacancies
-            $crawler->filter('.details-')->children()->each(
-                function (Crawler $crawler) {
-                    foreach ($crawler as $node) {
-                        if ($crawler->matches('.similar-vac-list')) {
-                            $node->parentNode->removeChild($node);
-                        }
+        $title = $crawler->filter('.title-')->first()->text();
+        $company = $crawler->filter('.employer-')->first()->filter('b')->text();
+        $salary = $crawler->filter('.salary-')->first()->text();
+        $salary = (int)$salary ? $salary : null;
+
+        // Remove child node from description with similar vacancies
+        $crawler->filter('.details-')->children()->each(
+            function (Crawler $crawler) {
+                foreach ($crawler as $node) {
+                    if ($crawler->matches('.similar-vac-list')) {
+                        $node->parentNode->removeChild($node);
                     }
                 }
-            );
+            }
+        );
 
-            $description_node = $crawler->filter('.details-')->first();
+        $description_node = $crawler->filter('.details-')->first();
 
-            $description = $description_node->text();
-            $description_html = $description_node->html();
+        $description = $description_node->text();
+        $description_html = $description_node->html();
 
-            $vacancy = new Vacancy();
+        $vacancy = new Vacancy();
 
-            $vacancy->setTitle($title);
-            $vacancy->setCompany($company);
-            $vacancy->setDescription($description);
-            $vacancy->setDescriptionHtml($description_html);
-            $vacancy->setSalary($salary);
-            $vacancy->setCategory($category);
-            $vacancy->setUrl($url);
-            $vacancy->setCreatedAt(new \DateTime());
+        $vacancy->setTitle($title);
+        $vacancy->setCompany($company);
+        $vacancy->setDescription($description);
+        $vacancy->setDescriptionHtml($description_html);
+        $vacancy->setSalary($salary);
+        $vacancy->setCategory($category);
+        $vacancy->setUrl($url);
+        $vacancy->setCreatedAt(new \DateTime());
 
-            $vacancies[] = $vacancy;
-        }
-
-        return $vacancies;
+        $this->getEntityManager()->persist($vacancy);
+        $this->getEntityManager()->flush();
     }
 }

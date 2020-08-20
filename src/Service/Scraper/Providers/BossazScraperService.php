@@ -38,24 +38,29 @@ class BossazScraperService extends AbstractScraperService
         $pagination = $crawler->filter('nav.pagination span.next > a');
 
         $nodes = $crawler->filter('.results-i');
-        $finished = false;
+
         $links = [];
+
+        $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
 
         foreach ($nodes as $node) {
             $node = new Crawler($node, self::BASE_URL);
             $link = $node->filter('a.results-i-link')->link();
             $crawler = $client->click($link);
+
             $date = $crawler->filter('.bumped_on.params-i-val')->text();
-            if (strtotime($date) <= $timestamp) {
-                $finished = true;
-                break;
-            }
             $link = $crawler->filter('a.lang-switcher.az')->link();
-            $links[] = $client->click($link)->getUri();
+            $link = $client->click($link)->getUri();
+
+            if (strtotime($date) <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
+                return $links;
+            }
+
+            $links[] = $link;
         }
 
         // If it's the last page, it shouldn't have a pagination link or it may have a special class
-        if ($pagination->count() && !$finished) {
+        if ($pagination->count()) {
             $nextPageUrl = $client->click($pagination->link())->getUri();
             $links = array_merge($links, $this->spot($nextPageUrl, $timestamp));
         }
@@ -66,44 +71,40 @@ class BossazScraperService extends AbstractScraperService
     /**
      * {@inheritdoc}
      */
-    public function scrape(array $urls, Category $category): array
+    public function scrape(string $url, Category $category)
     {
         $client = new Client();
 
-        $vacancies = [];
-        foreach ($urls as $url) {
-            $crawler = $client->request('GET', $url);
+        $crawler = $client->request('GET', $url);
 
-            $title = $crawler->filter('.post-title')->first()->text();
-            $company = $crawler->filter('.post-company')->first()->filter('a')->text();
-            $salary = $crawler->filter('.post-salary.salary')->first()->text();
-            $salary = (int)$salary ? $salary : null;
-            $description = $crawler->filter('.post-cols.post-info')->first()->text();
-            $description_html = $crawler->filter('.post-cols.post-info')->first()->html();
+        $title = $crawler->filter('.post-title')->first()->text();
+        $company = $crawler->filter('.post-company')->first()->filter('a')->text();
+        $salary = $crawler->filter('.post-salary.salary')->first()->text();
+        $salary = (int)$salary ? $salary : null;
+        $description = $crawler->filter('.post-cols.post-info')->first()->text();
+        $description_html = $crawler->filter('.post-cols.post-info')->first()->html();
 
-            // Go to the english version of site to take a date
-            $link = $crawler->filter('a.lang-switcher.en')->link();
-            $crawler = $client->click($link);
+        // Go to the english version of site to take a date
+        $link = $crawler->filter('a.lang-switcher.en')->link();
+        $crawler = $client->click($link);
 
-            $date = $crawler->filter('.bumped_on.params-i-val')->text();
+        $date = $crawler->filter('.bumped_on.params-i-val')->text();
 
-            $datetime = new \DateTime();
-            $datetime->setTimestamp(strtotime($date));
+        $datetime = new \DateTime();
+        $datetime->setTimestamp(strtotime($date));
 
-            $vacancy = new Vacancy();
+        $vacancy = new Vacancy();
 
-            $vacancy->setTitle($title);
-            $vacancy->setCompany($company);
-            $vacancy->setDescription($description);
-            $vacancy->setDescriptionHtml($description_html);
-            $vacancy->setSalary($salary);
-            $vacancy->setCategory($category);
-            $vacancy->setUrl($url);
-            $vacancy->setCreatedAt($datetime);
+        $vacancy->setTitle($title);
+        $vacancy->setCompany($company);
+        $vacancy->setDescription($description);
+        $vacancy->setDescriptionHtml($description_html);
+        $vacancy->setSalary($salary);
+        $vacancy->setCategory($category);
+        $vacancy->setUrl($url);
+        $vacancy->setCreatedAt($datetime);
 
-            $vacancies[] = $vacancy;
-        }
-
-        return $vacancies;
+        $this->getEntityManager()->persist($vacancy);
+        $this->getEntityManager()->flush();
     }
 }

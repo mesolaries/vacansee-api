@@ -27,6 +27,8 @@ class JobsearchScraperService extends AbstractScraperService
 
         $links = [];
 
+        $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
+
         $vacancies = $crawler->filter('table.hotvac')
             ->first()
             ->filter('tr')
@@ -34,11 +36,15 @@ class JobsearchScraperService extends AbstractScraperService
 
         foreach ($vacancies as $vacancy) {
             $vacancy = new Crawler($vacancy, self::BASE_URL);
+
             $date = $vacancy->filter('td.date_text')->first()->text();
-            if (strtotime($date) <= $timestamp) {
-                break;
+            $link = $vacancy->filter('a.hotv_text')->first()->link()->getUri();
+
+            if (strtotime($date) <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
+                return $links;
             }
-            $links[] = $vacancy->filter('a.hotv_text')->first()->link()->getUri();
+
+            $links[] = $link;
         }
 
         return $links;
@@ -47,62 +53,59 @@ class JobsearchScraperService extends AbstractScraperService
     /**
      * {@inheritDoc}
      */
-    public function scrape(array $urls, Category $category): array
+    public function scrape(string $url, Category $category)
     {
         $client = new Client();
-        $vacancies = [];
-        foreach ($urls as $url) {
-            $crawler = $client->request('GET', $url);
 
-            $title = $crawler
-                ->evaluate(
-                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[1]/td'
-                )
-                ->html();
-            $title = trim(explode('</span>', $title)[1]);
+        $crawler = $client->request('GET', $url);
 
-            $company = $crawler
-                ->evaluate(
-                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[2]/td[1]'
-                )
-                ->html();
-            $company = trim(explode('</span>', $company)[1]);
+        $title = $crawler
+            ->evaluate(
+                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[1]/td'
+            )
+            ->html();
+        $title = trim(explode('</span>', $title)[1]);
 
-            $description = $crawler
-                ->evaluate(
-                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
-                )
-                ->text();
+        $company = $crawler
+            ->evaluate(
+                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[2]/td[1]'
+            )
+            ->html();
+        $company = trim(explode('</span>', $company)[1]);
 
-            $description_html = $crawler
-                ->evaluate(
-                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
-                )
-                ->html();
+        $description = $crawler
+            ->evaluate(
+                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
+            )
+            ->text();
 
-            $date = $crawler
-                ->evaluate(
-                    '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[3]/td[1]'
-                )
-                ->html();
-            $date = trim(explode('</span>', $date)[1]);
+        $description_html = $crawler
+            ->evaluate(
+                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
+            )
+            ->html();
 
-            $datetime = new \DateTime();
-            $datetime->setTimestamp(strtotime($date));
+        $date = $crawler
+            ->evaluate(
+                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[3]/td[1]'
+            )
+            ->html();
+        $date = trim(explode('</span>', $date)[1]);
 
-            $vacancy = new Vacancy();
+        $datetime = new \DateTime();
+        $datetime->setTimestamp(strtotime($date));
 
-            $vacancy->setTitle($title);
-            $vacancy->setCompany($company);
-            $vacancy->setDescription($description);
-            $vacancy->setDescriptionHtml($description_html);
-            $vacancy->setCategory($category);
-            $vacancy->setUrl($url);
-            $vacancy->setCreatedAt($datetime);
+        $vacancy = new Vacancy();
 
-            $vacancies[] = $vacancy;
-        }
+        $vacancy->setTitle($title);
+        $vacancy->setCompany($company);
+        $vacancy->setDescription($description);
+        $vacancy->setDescriptionHtml($description_html);
+        $vacancy->setCategory($category);
+        $vacancy->setUrl($url);
+        $vacancy->setCreatedAt($datetime);
 
-        return $vacancies;
+        $this->getEntityManager()->persist($vacancy);
+        $this->getEntityManager()->flush();
     }
 }

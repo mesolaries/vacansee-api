@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class ScraperScrapeCommand extends Command
 {
@@ -68,6 +69,7 @@ class ScraperScrapeCommand extends Command
 
         $count = 0;
         foreach ($services as $alias => $service) {
+            $io->note("Scraping $alias provider...");
             $count += $this->scrape($alias, $io);
         }
 
@@ -111,11 +113,24 @@ class ScraperScrapeCommand extends Command
                 continue;
             }
 
-            $spotted_urls = $scraper->spot($url, strtotime(self::INTERVAL));
-            $filtered_urls = $scraper->filter($spotted_urls, Vacancy::class);
-            $vacancies = $scraper->scrape($filtered_urls, $category);
-            $scraper->flush($vacancies);
-            $count += count($filtered_urls);
+            $io->note("Category: $categorySlug");
+
+            try {
+                $spotted_urls = $scraper->spot($url, strtotime(self::INTERVAL));
+            } catch (TransportExceptionInterface $e) {
+                $io->warning($e->getMessage() . ' Continuing with the next category.');
+                continue;
+            }
+
+            foreach ($spotted_urls as $spotted_url) {
+                try {
+                    $scraper->scrape($spotted_url, $category);
+                    $count++;
+                } catch (TransportExceptionInterface $e) {
+                    $io->warning($e->getMessage() . ' Continuing with the next spotted url.');
+                    continue;
+                }
+            }
         }
 
         return $count;
