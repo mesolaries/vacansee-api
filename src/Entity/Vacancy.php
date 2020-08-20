@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiFilter(RangeFilter::class, properties={"id"})
  * @ORM\Entity(repositoryClass=VacancyRepository::class)
  * @ORM\Table(name="vacancies")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Vacancy
 {
@@ -87,6 +88,11 @@ class Vacancy
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $expiresAt;
 
     public function getId(): ?int
     {
@@ -192,5 +198,25 @@ class Vacancy
     public static function getCategories()
     {
         return self::CATEGORIES;
+    }
+
+    public function getExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiresAt(\DateTimeInterface $expiresAt): self
+    {
+        $this->expiresAt = $expiresAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist()
+    {
+        $this->expiresAt = (clone($this->createdAt))->modify('+3 month');
     }
 }

@@ -19,6 +19,16 @@ class VacancyRepository extends ServiceEntityRepository
         parent::__construct($registry, Vacancy::class);
     }
 
+    public function findExpiredVacancies()
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.expiresAt <= :now')
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Vacancy[] Returns an array of Vacancy objects
     //  */
