@@ -49,3 +49,7 @@ services:
         class: App\Service\Scraper\Providers\ProjobsScraperService
         tags:
             - { name: 'app.scrapers', alias: 'projobs' }
+    app.scraper.offeraz:
+        class: App\Service\Scraper\Providers\OfferazScraperService
+        tags:
+            - { name: 'app.scrapers', alias: 'offeraz' }
