@@ -29,9 +29,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-#    _instanceof:
-#        App\Service\Scraper\ScraperServiceInterface:
-#            tags: ['app.scrapers']
 
     app.scraper.bossaz:
         class: App\Service\Scraper\Providers\BossazScraperService
@@ -53,3 +50,7 @@ services:
         class: App\Service\Scraper\Providers\OfferazScraperService
         tags:
             - { name: 'app.scrapers', alias: 'offeraz' }
+    app.scraper.hellojobaz:
+        class: App\Service\Scraper\Providers\HellojobazScraperService
+        tags:
+            - { name: 'app.scrapers', alias: 'hellojobaz' }
