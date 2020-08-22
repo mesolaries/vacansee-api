@@ -92,7 +92,7 @@ class ProjobsScraperService extends AbstractScraperService
         $vacancy->setCompany($data['companyName']);
         $vacancy->setDescription($data['description']);
         $vacancy->setDescriptionHtml($data['description']);
-        $vacancy->setSalary($data['salary'] . ' ' . $data['currency']['name']);
+        $vacancy->setSalary($data['salaryWithCurrency']);
         $vacancy->setCategory($category);
         $vacancy->setUrl($this->makeWebUrl($data['id']));
         $vacancy->setCreatedAt($datetime);
