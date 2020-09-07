@@ -1,13 +1,64 @@
-<h1>Hi! I'm here to remember you your API Key</h1>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Vacansee Forgot API Key</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body style="margin: 0; padding: 0;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td style="padding: 10px 0 30px 0;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"
+                   style="border: 1px solid #cccccc; border-collapse: collapse;">
+                <tr>
+                    <td align="center" bgcolor="#fff"
+                        style="padding: 40px 0 30px 0; color: #153643; font-size: 28px; font-weight: bold; font-family: Arial, sans-serif;">
+                        <img src="{{ asset('build/images/logo_1024x512.png') }}" alt="Vacansee logo"
+                             width="400" height="200" style="display: block;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td style="color: #153643; font-family: Arial, sans-serif; font-size: 24px;">
+                                    <b>Salam!</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
+                                    Kimsə sizin email-dən istifadə etməklə Vacansee - də qeydiyyatdan keçmək istəyib. <br>
+                                    Əgər bu sizsinizsə o zaman aşağıda sizə API açarınızı xatırladırıq. Əks halda bu emailə məhəl qoymayın.
+                                    <pre style="color: #00B0AD;">{{ apikey }}</pre>
+                                    Bu açarı üçüncü şəxslərlə paylaşmayın!<br><br>
 
-<p>
-    Someone tried to get API Key with your email. <br>
-    If it's not you then just ignore this email.<br>
-    If you forgot your API Key here it is.<br><br>
-</p>
-
-<pre>{{ apikey }}</pre>
-
-<p>
-    Cheers!
-</p>
+                                    Dokumentasiya ilə <a style="color: #00B0AD;" href="{{ url('api_doc') }}">burada</a> tanış ola
+                                    bilərsiniz.<br><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td bgcolor="#00B0AD" style="padding: 30px 30px 30px 30px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;"
+                                                width="100%">
+                                                &copy; 2020 Vacansee | <a href="https://www.linkedin.com/in/mnf-emil" style="color: #ffffff;">Emil
+                                                    Manafov</a> tərəfindən yaradılmışdır.<br><br>
+                                                Çətinlik yaranarsa <a href="mailto:support@vacansee.xyz"
+                                                                      style="color: #ffffff;">support@vacansee.xyz</a>
+                                                maili ilə əlaqə saxlaya bilərsiniz.
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+</table>
+</body>
+</html>

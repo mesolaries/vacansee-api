@@ -58,7 +58,8 @@ class HomeController extends AbstractController
 
                 $this->addFlash(
                     'info',
-                    "We've a user with this email. If it's you and you forgot your API key, please check your email."
+                    "Bu email-lə qeydiyyatdan keçmiş istifadəçimiz artıq var. " .
+                    "Əgər bu sizsinizsə və API açarınızı unutmusunuzsa elektron poçtunuzu yoxlayın."
                 );
 
                 return $this->redirectToRoute('app.home');
@@ -78,7 +79,7 @@ class HomeController extends AbstractController
 
             $this->addFlash(
                 'success',
-                "We've sent your API key to the email you've specified."
+                "API açarınızı qeyd etdiyiniz email ünvanına göndərdik. Mailinizi və spam qovluğu yoxlamağı unutmayın."
             );
 
             return $this->redirectToRoute('app.home');

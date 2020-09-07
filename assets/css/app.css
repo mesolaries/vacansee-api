@@ -1,2 +1,33 @@
-@import "~bootstrap";
-@import "login.css";
+body {
+    background-image: url("../../public/build/images/bg_cloud.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.form-control:focus {
+    border-color: #00B0AD;
+    box-shadow: 0 0 0 0.2rem rgba(0, 176, 173, 0.25);
+}
+
+.logo {
+    width: 192px;
+}
+
+.alert {
+    font-size: 0.6rem;
+}
+
+.close {
+    font-size: 0.8rem;
+}
+
+@media (max-width: 1200px) {
+    body {
+        background-image: none;
+    }
+
+    .logo {
+        width: 150px;
+    }
+}

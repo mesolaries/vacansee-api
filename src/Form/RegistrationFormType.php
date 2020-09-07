@@ -18,7 +18,7 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Email',
                 ],
-                'help' => "<small class='text-light form-text'>We'll send API key to this email</small>",
+                'help' => "<p class='form-text text-center text-muted small'>API açarı bu ünvana göndərəcəyik</p>",
                 'help_html' => true,
             ])
         ;

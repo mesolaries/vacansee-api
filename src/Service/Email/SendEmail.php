@@ -33,8 +33,8 @@ class SendEmail
      */
     public function sendApikeyMessage(string $to, array $params)
     {
-        $message = (new Swift_Message('Vacansee - API key'))
-            ->setFrom('mnf.emil@gmail.com', 'Vacansee')
+        $message = (new Swift_Message('Vacansee - Qeydiyyat'))
+            ->setFrom('noreply@vacansee.xyz', 'Vacansee')
             ->setTo($to)
             ->setBody(
                 $this->twig->render('registration/apikey_email.html.twig', $params),
@@ -55,8 +55,8 @@ class SendEmail
      */
     public function sendForgotApikeyMessage(string $to, array $params)
     {
-        $message = (new Swift_Message('Vacansee - Forgot your API key?'))
-            ->setFrom('mnf.emil@gmail.com', 'Vacansee')
+        $message = (new Swift_Message('Vacansee - API açarınızı itirmisiniz?'))
+            ->setFrom('noreply@vacansee.xyz', 'Vacansee')
             ->setTo($to)
             ->setBody(
                 $this->twig->render('registration/forgot_apikey_email.html.twig', $params),
