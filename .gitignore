@@ -18,3 +18,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> user defined ignores ###
+.htaccess
+###< user defined ignores ###
