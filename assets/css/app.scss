@@ -5,24 +5,24 @@ $theme-colors: (
 );
 
 html {
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 @include media-breakpoint-up(sm) {
   html {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 }
 
 @include media-breakpoint-up(md) {
   html {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 }
 
 @include media-breakpoint-up(lg) {
   html {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 }
 
