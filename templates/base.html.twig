@@ -29,7 +29,7 @@
 
     {% block stylesheets %}{% endblock %}
 </head>
-<body style="background-image: url('{{ asset('build/images/background-1920x1080.png') }}')">
+<body class="bg" style="background-image: url('{{ asset('build/images/background-1920x1080.png') }}')">
 {% block body %}{% endblock %}
 {{ encore_entry_script_tags('app') }}
 {% block javascripts %}{% endblock %}

@@ -1,7 +1,8 @@
-body {
-    background-size: cover;
+.bg {
     background-repeat: no-repeat;
-    background-position: center;
+    background-size: cover;
+    background-position-y: top;
+    background-position-x: right;
 }
 
 .form-control:focus {
@@ -16,7 +17,7 @@ body {
 }
 
 .logo {
-    width: 192px;
+    width: 160px;
 }
 
 .alert {
@@ -33,6 +34,6 @@ body {
     }
 
     .logo {
-        width: 150px;
+        width: 120px;
     }
 }
