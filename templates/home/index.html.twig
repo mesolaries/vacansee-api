@@ -1,22 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Vacansee | İş elanları üçün API{% endblock %}
+{% block title %}Vacansee - İş elanları üçün API{% endblock %}
 
 {% block meta %}
-    <meta name="description" content="Azərbaycan iş elanlarını bir məkanda toplayıb, sizə pulsuz API təqdim edirik.">
+    <meta name="description"
+          content="Azərbaycanın müxtəlif elan saytlarından ən son vakansiyaları bir məkanda toplayıb, sizə pulsuz API təqdim edirik.">
     <meta name="keywords"
           content="iş elanı, iş elanları, iş, vakansiya, vakansiyalar, Azərbaycanda iş, Bakıda iş, API, pulsuz, telegram, IT vakansiyalar, developer, proqramçı, database, baza">
+
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Vacansee | İş elanları üçün API">
-    <meta property="og:description"
-          content="Azərbaycan iş elanlarını bir məkanda toplayıb, sizə pulsuz API təqdim edirik.">
-    <meta property="og:image" content="{{ asset('build/images/logo_1024x512.png') }}">
-    <meta name="twitter:title" content="Vacansee | İş elanları üçün API">
-    <meta name="twitter:description"
-          content="Azərbaycan iş elanlarını bir məkanda toplayıb, sizə pulsuz API təqdim edirik.">
-    <meta name="twitter:image" content="Azərbaycan iş elanlarını bir məkanda toplayıb, sizə pulsuz API təqdim edirik.">
-    {# <meta name="twitter:site" content="@WEBSITE_USERNAME"> #}
-    {# <meta name="twitter:creator" content="@USERNAME"> #}
+    <meta property="og:title" content>
+    <meta property="og:description" content>
+    <meta property="og:image" content="{{ absolute_url(asset('build/images/preview-1200x630.png')) }}">
+    <meta property="og:site_name" content="Vacansee">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content>
+    <meta name="twitter:description" content>
+    <meta name="twitter:image" content="{{ absolute_url(asset('build/images/preview-1200x630.png')) }}">
 {% endblock %}
 
 {% block body %}
@@ -25,7 +26,7 @@
 
         <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="{{ path('app.home') }}">
-                <img class="logo" src="{{ asset('build/images/logo_1024x512.png') }}" alt="Vacansee logo">
+                <img class="logo" src="{{ asset('build/images/logo-600x190.png') }}" alt="Vacansee logo">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,9 +52,9 @@
                                         class="fas fa-robot"></i>
                                 Vacansee bot</a>
                             <a class="dropdown-item text-primary" href="https://t.me/vacansee_all" target="_blank"><i
-                                        class="fas fa-bullhorn"></i> Vacansee</a>
+                                        class="fas fa-bullhorn"></i> Vakansiyalar</a>
                             <a class="dropdown-item text-primary" href="https://t.me/vacansee_it" target="_blank"><i
-                                        class="fas fa-bullhorn"></i> IT Vacansee</a>
+                                        class="fas fa-bullhorn"></i> IT Vakansiyalar</a>
                         </div>
                     </li>
                     <li class="nav-item">

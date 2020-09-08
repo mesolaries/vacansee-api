@@ -1,5 +1,4 @@
 body {
-    background-image: url("../../public/build/images/bg_cloud.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -8,6 +7,12 @@ body {
 .form-control:focus {
     border-color: #00B0AD;
     box-shadow: 0 0 0 0.2rem rgba(0, 176, 173, 0.25);
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff !important;
+    text-decoration: none !important;
+    background-color: #00B0AD !important;
 }
 
 .logo {
@@ -24,7 +29,7 @@ body {
 
 @media (max-width: 1200px) {
     body {
-        background-image: none;
+        background-image: none !important;
     }
 
     .logo {
