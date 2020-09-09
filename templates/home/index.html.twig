@@ -21,122 +21,83 @@
 {% endblock %}
 
 {% block body %}
+    <header class="mb-2">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+                <a class="navbar-brand" href="{{ path('app.home') }}">
+                    <img class="logo" src="{{ asset('build/images/logo-600x190.png') }}" alt="Vacansee logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-    <div class="container-fluid d-flex flex-column vh-100">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('api_doc') }}">Dokumentasiya</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://yasobe.ru/na/donate_vacansee"
+                               target="_blank">İanə</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="tg://resolve?domain=vacansee_bot"><i
+                                            class="fas fa-robot"></i>
+                                    Vacansee bot</a>
+                                <a class="dropdown-item" href="tg://resolve?domain=vacansee_all"><i
+                                            class="fas fa-bullhorn"></i> Vakansiyalar</a>
+                                <a class="dropdown-item" href="tg://resolve?domain=vacansee_it"><i
+                                            class="fas fa-bullhorn"></i> IT Vakansiyalar</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/mesolaries/vacansee-api" target="_blank"><i
+                                        class="fab fa-github"></i> Github</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="mailto:support@vacansee.xyz"
+                               target="_blank">Əlaqə</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-        <nav class="navbar navbar-expand-lg navbar-light mb-5">
-            <a class="navbar-brand" href="{{ path('app.home') }}">
-                <img class="logo" src="{{ asset('build/images/logo-600x190.png') }}" alt="Vacansee logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <section class="pt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h1 class="display-4 mb-3 header">İş elanları bir məkanda</h1>
+                    <p class="lead text-light">
+                        Biz Azərbaycanın müxtəlif iş elanı saytlarında yerləşdirilən bütün vakansiyaları bir yerdə
+                        toplayırıq. Hər gün yenilənən bazamızda yalnız ən son vakansiyaları görə bilərsiniz.
+                    </p>
+                    <p class="lead text-light">Bazadan istifadə etmək üçün sizə pulsuz API təqdim edirik. Qeydiyyat üçün
+                        sadəcə email tələb
+                        olunur.</p>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-primary" href="{{ path('api_doc') }}">Dokumentasiya</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-primary" href="https://money.yandex.ru/to/4100115655723166"
-                           target="_blank">İanə</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-primary" href="#" id="navbarDropdown"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fab fa-telegram"></i> Telegram
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item text-primary" href="https://t.me/vacansee_bot" target="_blank"><i
-                                        class="fas fa-robot"></i>
-                                Vacansee bot</a>
-                            <a class="dropdown-item text-primary" href="https://t.me/vacansee_all" target="_blank"><i
-                                        class="fas fa-bullhorn"></i> Vakansiyalar</a>
-                            <a class="dropdown-item text-primary" href="https://t.me/vacansee_it" target="_blank"><i
-                                        class="fas fa-bullhorn"></i> IT Vakansiyalar</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-primary" href="https://github.com/mesolaries/vacansee-api"><i
-                                    class="fab fa-github"></i> Github</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-primary" href="mailto:support@vacansee.xyz"
-                           target="_blank">Əlaqə</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                    {{ form_start(registrationForm) }}
+                    {{ form_row(registrationForm.email) }}
 
-        <div class="row align-items-lg-start align-items-xl-center justify-content-start flex-fill mx-xl-3">
+                    <button type="submit" class="btn btn-primary w-100">Göndər</button>
+                    {{ form_end(registrationForm) }}
 
-            <div class="col-lg-12 col-xl-6">
-                <h1 class="mb-4">İş elanları bir məkanda</h1>
-                <p class="lead text-primary">
-                    Biz Azərbaycanın müxtəlif iş elanı saytlarında yerləşdirilən bütün vakansiyaları bir yerdə
-                    toplayırıq. Hər gün yenilənən bazamızda yalnız ən son vakansiyaları görə bilərsiniz.
-                </p>
-                <p class="lead text-primary">Bazadan istifadə etmək üçün sizə pulsuz API təqdim edirik. Qeydiyyat üçün
-                    sadəcə email tələb
-                    olunur.</p>
-
-                {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.email) }}
-
-                <button type="submit" class="btn btn-primary w-100">Göndər</button>
-                {{ form_end(registrationForm) }}
-
-                <footer class="my-3">
-                    <p class="text-center small">&copy; {{ 'now'|date('Y') }} Vacansee | <a
-                                href="https://www.linkedin.com/in/mnf-emil" target="_blank" class="text-primary">Emil
-                            Manafov</a> tərəfindən
-                        yaradılmışdır.</p>
-                </footer>
+                    <footer class="mt-3">
+                        <p class="text-center text-light">&copy; {{ 'now'|date('Y') }} Vacansee | <a
+                                    href="https://www.linkedin.com/in/mnf-emil" target="_blank" class="text-primary">Emil
+                                Manafov</a> tərəfindən
+                            yaradılmışdır.</p>
+                    </footer>
+                </div>
             </div>
         </div>
-
-
-        {% for flashSuccess in app.flashes('success') %}
-            <div class="row mx-1">
-                <div class="alert alert-success col-md-4 ml-auto">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                        ×
-                    </button>
-                    <i class="fas fa-check"></i> <strong>Uğurlu əməliyyat</strong>
-                    <hr class="message-inner-separator my-2">
-                    <p>{{ flashSuccess }}</p>
-                </div>
-            </div>
-        {% endfor %}
-
-        {% for flashInfo in app.flashes('info') %}
-            <div class="row mx-1">
-                <div class="alert alert-info col-md-4 ml-auto">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                        ×
-                    </button>
-                    <i class="fas fa-info"></i> <strong>Məlumat</strong>
-                    <hr class="message-inner-separator my-2">
-                    <p>{{ flashInfo }}</p>
-                </div>
-            </div>
-        {% endfor %}
-
-        {% for flashError in app.flashes('error') %}
-            <div class="row mx-1">
-                <div class="alert alert-danger col-md-4 ml-auto">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                        ×
-                    </button>
-                    <i class="fas fa-exclamation"></i> <strong>Səhv</strong>
-                    <hr class="message-inner-separator my-2">
-                    <p>{{ flashError }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-
-
-
+    </section>
 {% endblock %}

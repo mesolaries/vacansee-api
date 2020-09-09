@@ -1,29 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @import "node_modules/bootstrap/scss/bootstrap";
+
+$font-family-base: Poppins, sans-serif;
 
 $theme-colors: (
         primary: #00B0AD
 );
 
 html {
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 @include media-breakpoint-up(sm) {
-  html {
-    font-size: 1rem;
-  }
-}
-
-@include media-breakpoint-up(md) {
   html {
     font-size: 1.2rem;
   }
 }
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(xl) {
   html {
     font-size: 1.4rem;
   }
 }
 
 @import "~bootstrap";
+
+.form-control:focus {
+  border-color: #00B0AD;
+  box-shadow: 0 0 0 0.2rem rgba(0, 176, 173, 0.25);
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  color: #fff !important;
+  text-decoration: none !important;
+  background-color: #00B0AD !important;
+}
+
+.nav-link:hover {
+  color: #00B0AD !important;
+}
+
+.header {
+  color: #00B0AD !important;
+}
+
+.logo {
+  width: 140px;
+}
+
+.alert {
+  font-size: 0.6rem;
+}
+
+.close {
+  font-size: 0.8rem;
+}
+
+.bg {
+  background-size: 300px auto;
+}
+
+@include media-breakpoint-up(xl) {
+  .logo {
+    width: 160px;
+  }
+}
