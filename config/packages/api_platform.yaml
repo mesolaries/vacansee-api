@@ -25,7 +25,7 @@ api_platform:
             items_per_page: 30
 
             # The maximum number of items per page.
-            maximum_items_per_page: 200
+            maximum_items_per_page: 100
 
             # The default name of the parameter handling the page number.
             page_parameter_name: 'page'
