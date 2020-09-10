@@ -41,8 +41,7 @@ class ScraperScrapeCommand extends Command
                 'provider',
                 'p',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                "Scrape only this vacancy provider.\n" .
-                "Choose from: [" . implode(', ', array_keys($this->chain->getScrapers())) . "]",
+                "Scrape only this vacancy provider.",
                 array_keys($this->chain->getScrapers())
             );
     }
