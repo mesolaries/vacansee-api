@@ -24,8 +24,17 @@ api_platform:
             # The default number of items per page.
             items_per_page: 30
 
+            # The maximum number of items per page.
+            maximum_items_per_page: 200
+
             # The default name of the parameter handling the page number.
             page_parameter_name: 'page'
+
+            # To allow the client to set the number of items per page.
+            client_items_per_page: true
+
+            # The name of the query parameter to set the number of items per page.
+            items_per_page_parameter_name: 'itemsPerPage'
 
     # The list of enabled formats. The first one will be the default.
     formats:
