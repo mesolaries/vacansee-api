@@ -73,7 +73,7 @@ class RabotaazScraperService extends AbstractScraperService
 
         $crawler = $client->request('GET', $url);
 
-        $title = $crawler->filter('.title-')->first()->text();
+        $title = $crawler->filter('.title- h1')->first()->text();
         $company = $crawler->filter('.employer-')->first()->filter('b')->text();
         $salary = $crawler->filter('.salary-')->first()->text();
         $salary = (int)$salary ? $salary : null;
