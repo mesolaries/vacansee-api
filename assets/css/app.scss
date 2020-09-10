@@ -49,14 +49,6 @@ html {
   width: 140px;
 }
 
-.alert {
-  font-size: 0.6rem;
-}
-
-.close {
-  font-size: 0.8rem;
-}
-
 .bg {
   background-size: 300px auto;
 }
@@ -64,5 +56,13 @@ html {
 @include media-breakpoint-up(xl) {
   .logo {
     width: 160px;
+  }
+
+  .alert {
+    font-size: 70%;
+  }
+
+  .close {
+    font-size: 0.9rem;
   }
 }
