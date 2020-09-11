@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiFilter(SearchFilter::class, properties={"title": "ipartial", "company": "ipartial", "salary": "iword_start",
  *                                 "url": "ipartial", "category.id": "exact", "category.slug": "exact"})
  * @ApiFilter(DateFilter::class, properties={"createdAt"})
- * @ApiFilter(OrderFilter::class, properties={"createdAt", "title"})
+ * @ApiFilter(OrderFilter::class, properties={"createdAt", "title", "id"})
  * @ApiFilter(ExistsFilter::class, properties={"salary"})
  * @ApiFilter(RangeFilter::class, properties={"id"})
  * @ORM\Entity(repositoryClass=VacancyRepository::class)
