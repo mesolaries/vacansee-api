@@ -21,4 +21,6 @@ yarn-error.log
 
 ###> user defined ignores ###
 /.htaccess
+/public/robots.txt
+/public/sitemap.xml
 ###< user defined ignores ###
