@@ -31,10 +31,14 @@ html {
   box-shadow: 0 0 0 0.2rem rgba(0, 176, 173, 0.25);
 }
 
-.dropdown-item.active, .dropdown-item:active {
+.dropdown-item.active, .dropdown-item:active, .dropdown-item:hover, .dropdown-item:focus {
   color: #fff !important;
   text-decoration: none !important;
   background-color: #00B0AD !important;
+}
+
+.nav-link {
+  color: #f8f9fa !important;
 }
 
 .nav-link:hover {
@@ -50,7 +54,7 @@ html {
 }
 
 .bg {
-  background-size: 300px auto;
+  background-size: 150px auto;
 }
 
 @include media-breakpoint-up(xl) {
