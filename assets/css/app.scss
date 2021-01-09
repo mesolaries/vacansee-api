@@ -5,7 +5,8 @@
 $font-family-base: Poppins, sans-serif;
 
 $theme-colors: (
-        primary: #00B0AD
+        primary: #05868C,
+        secondary: #F8F9FA
 );
 
 html {
@@ -20,41 +21,72 @@ html {
 
 @include media-breakpoint-up(xl) {
   html {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
   }
 }
 
 @import "~bootstrap";
 
 .form-control:focus {
-  border-color: #00B0AD;
-  box-shadow: 0 0 0 0.2rem rgba(0, 176, 173, 0.25);
+  border-color: #05868C;
+  box-shadow: 0 0 0 0.2rem rgba(2, 134, 140, 0.25);
+}
+
+.dropdown-menu {
+  background-color: #ffffff88 !important;
+}
+
+.dropdown-item {
+  color: #05868C !important;
 }
 
 .dropdown-item.active, .dropdown-item:active, .dropdown-item:hover, .dropdown-item:focus {
-  color: #fff !important;
+  color: #F8F9FA !important;
   text-decoration: none !important;
-  background-color: #00B0AD !important;
+  background-color: #05868C !important;
 }
 
 .nav-link {
-  color: #f8f9fa !important;
+  color: #F8F9FA !important;
 }
 
 .nav-link:hover {
-  color: #00B0AD !important;
+  color: #ffffff88 !important;
+}
+
+a.text-secondary:hover, a.text-secondary:focus {
+  color: #ffffff88 !important;
 }
 
 .header {
-  color: #00B0AD !important;
+  color: #F8F9FA !important;
 }
 
 .logo {
   width: 140px;
 }
 
+.display-4 {
+  font-size: 2.5rem;
+}
+
+.lead {
+  font-size: 1rem;
+}
+
+.btn {
+  background-color: #ffffff44;
+}
+
+.btn:hover, .btn:focus, .btn:active {
+  color: #05868C;
+}
+
 .bg {
-  background-size: 150px auto;
+  -webkit-background-size: cover !important;
+  -moz-background-size: cover !important;
+  -o-background-size: cover !important;
+  background-size: cover !important;
 }
 
 @include media-breakpoint-up(xl) {
