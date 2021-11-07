@@ -18,8 +18,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * used for the request. Returning false will cause this authenticator
      * to be skipped.
      *
-     * @param Request $request
-     *
      * @return bool
      */
     public function supports(Request $request)
@@ -31,8 +29,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * Called on every request. Return whatever credentials you want to
      * be passed to getUser() as $credentials.
      *
-     * @param Request $request
-     *
      * @return array|mixed
      */
     public function getCredentials(Request $request)
@@ -43,8 +39,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param mixed                 $credentials
-     * @param UserProviderInterface $userProvider
+     * @param mixed $credentials
      *
      * @return UserInterface|void|null
      */
@@ -61,8 +56,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param mixed         $credentials
-     * @param UserInterface $user
+     * @param mixed $credentials
      *
      * @return bool
      */
@@ -76,9 +70,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request                 $request
-     * @param AuthenticationException $exception
-     *
      * @return JsonResponse|Response|null
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
@@ -94,9 +85,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request        $request
-     * @param TokenInterface $token
-     * @param string         $providerKey
+     * @param string $providerKey
      *
      * @return Response|null
      */
@@ -107,10 +96,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Called when authentication is needed, but it's not sent
-     *
-     * @param Request                      $request
-     * @param AuthenticationException|null $authException
+     * Called when authentication is needed, but it's not sent.
      *
      * @return JsonResponse|Response
      */

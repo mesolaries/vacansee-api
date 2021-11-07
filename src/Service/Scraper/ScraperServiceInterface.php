@@ -17,7 +17,7 @@ interface ScraperServiceInterface
     public function spot(string $url, int $timestamp): array;
 
     /**
-     * Scrapes website's detailed view and flushes to database
+     * Scrapes website's detailed view and flushes to database.
      *
      * @param string   $urls     URLs to scrape
      * @param Category $category Website's data category (e.g. it, design and etc.)

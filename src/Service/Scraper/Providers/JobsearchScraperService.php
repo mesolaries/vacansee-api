@@ -5,9 +5,7 @@ namespace App\Service\Scraper\Providers;
 use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
-use Carbon\Carbon;
 use Goutte\Client;
-use Symfony\Component\DomCrawler\Crawler;
 
 class JobsearchScraperService extends AbstractScraperService
 {

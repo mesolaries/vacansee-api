@@ -2,7 +2,6 @@
 
 namespace App\Service\Scraper;
 
-
 class ScraperChainService
 {
     private array $scrapers;

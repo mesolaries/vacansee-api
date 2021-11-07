@@ -2,7 +2,6 @@
 
 namespace App\Service\Email;
 
-
 use Swift_Mailer;
 use Swift_Message;
 use Twig\Environment;
@@ -24,7 +23,6 @@ class SendEmail
 
     /**
      * @param string $to     Email destination address
-     *
      * @param array  $params Parameters to pass to the twig renderer
      *
      * @throws LoaderError
@@ -46,7 +44,6 @@ class SendEmail
 
     /**
      * @param string $to     Email destination address
-     *
      * @param array  $params Parameters to pass to the twig renderer
      *
      * @throws LoaderError

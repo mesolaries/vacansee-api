@@ -29,9 +29,7 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/", name="app.home")
-     * @param Request $request
      *
-     * @return Response
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
@@ -58,8 +56,8 @@ class HomeController extends AbstractController
 
                 $this->addFlash(
                     'info',
-                    "Bu email-lə qeydiyyatdan keçmiş istifadəçimiz artıq var. " .
-                    "Əgər bu sizsinizsə və API açarınızı unutmusunuzsa elektron poçtunuzu yoxlayın."
+                    'Bu email-lə qeydiyyatdan keçmiş istifadəçimiz artıq var. '.
+                    'Əgər bu sizsinizsə və API açarınızı unutmusunuzsa elektron poçtunuzu yoxlayın.'
                 );
 
                 return $this->redirectToRoute('app.home');
@@ -79,7 +77,7 @@ class HomeController extends AbstractController
 
             $this->addFlash(
                 'success',
-                "API açarınızı qeyd etdiyiniz email ünvanına göndərdik. Mailinizi və spam qovluğu yoxlamağı unutmayın."
+                'API açarınızı qeyd etdiyiniz email ünvanına göndərdik. Mailinizi və spam qovluğu yoxlamağı unutmayın.'
             );
 
             return $this->redirectToRoute('app.home');

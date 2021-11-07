@@ -216,6 +216,6 @@ class Vacancy
      */
     public function prePersist()
     {
-        $this->expiresAt = (clone($this->createdAt))->modify('+3 month');
+        $this->expiresAt = (clone $this->createdAt)->modify('+3 month');
     }
 }

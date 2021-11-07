@@ -2,7 +2,6 @@
 
 namespace App\Service\Scraper\Providers;
 
-
 use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
@@ -28,7 +27,7 @@ class OfferazScraperService extends AbstractScraperService
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function spot(string $url, int $timestamp): array
     {
@@ -76,7 +75,8 @@ class OfferazScraperService extends AbstractScraperService
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function scrape(string $url, Category $category)
@@ -88,7 +88,7 @@ class OfferazScraperService extends AbstractScraperService
         $title = $crawler->filter('#breadcrumbs .breadcrumb_last')->first()->text();
         $company = $crawler->filter('ul.data-list li')->eq(2)->filter('span.value')->text();
         $salary = $crawler->filter('ul.data-list li')->eq(4)->filter('span.value')->text();
-        $salary = (int)$salary ? $salary : null;
+        $salary = (int) $salary ? $salary : null;
 
         // Remove child node from description with social links
         $crawler->filter('div.container div.content')->children()->each(

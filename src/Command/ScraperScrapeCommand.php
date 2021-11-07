@@ -41,7 +41,7 @@ class ScraperScrapeCommand extends Command
                 'provider',
                 'p',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                "Scrape only this vacancy provider.",
+                'Scrape only this vacancy provider.',
                 array_keys($this->chain->getScrapers())
             );
     }
@@ -55,11 +55,7 @@ class ScraperScrapeCommand extends Command
         $services = array_intersect_key($this->chain->getScrapers(), array_flip($provider));
 
         if (!count($services)) {
-            throw new InvalidOptionException(
-                "The provider(s) you've entered are invalid. Please, choose from: [" .
-                implode(', ', array_keys($this->chain->getScrapers())) .
-                ']'
-            );
+            throw new InvalidOptionException("The provider(s) you've entered are invalid. Please, choose from: [".implode(', ', array_keys($this->chain->getScrapers())).']');
         }
 
         $io->writeln("Give me a moment. I'm scraping...");
@@ -75,16 +71,12 @@ class ScraperScrapeCommand extends Command
         $scraping_end_time = time();
 
         $io->success("Success! Added $count new vacancies.");
-        $io->note("Scraping took " . ($scraping_end_time - $scraping_start_time) . " seconds.");
+        $io->note('Scraping took '.($scraping_end_time - $scraping_start_time).' seconds.');
 
         return 0;
     }
 
     /**
-     * @param string       $alias
-     *
-     * @param SymfonyStyle $io
-     *
      * @return int
      */
     private function scrape(string $alias, SymfonyStyle $io)
@@ -117,16 +109,16 @@ class ScraperScrapeCommand extends Command
             try {
                 $spotted_urls = $scraper->spot($url, strtotime(self::INTERVAL));
             } catch (TransportExceptionInterface $e) {
-                $io->warning($e->getMessage() . ' Continuing with the next category.');
+                $io->warning($e->getMessage().' Continuing with the next category.');
                 continue;
             }
 
             foreach ($spotted_urls as $spotted_url) {
                 try {
                     $scraper->scrape($spotted_url, $category);
-                    $count++;
+                    ++$count;
                 } catch (TransportExceptionInterface $e) {
-                    $io->warning($e->getMessage() . ' Continuing with the next spotted url.');
+                    $io->warning($e->getMessage().' Continuing with the next spotted url.');
                     continue;
                 }
             }

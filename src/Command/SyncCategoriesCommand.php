@@ -51,7 +51,7 @@ class SyncCategoriesCommand extends Command
                     continue;
                 }
 
-                $synced++;
+                ++$synced;
 
                 $category->setSlug($definedCategory);
                 $category->setName($allowedCategories[$definedCategory]);

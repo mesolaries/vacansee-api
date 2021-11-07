@@ -56,13 +56,12 @@ class ProjobsScraperService extends AbstractScraperService
             $links[] = $link;
         }
 
-
-        $nextPageUrl = preg_replace('/page=[0-9]+/', 'page=' . ($this->page + 1), $url);
+        $nextPageUrl = preg_replace('/page=[0-9]+/', 'page='.($this->page + 1), $url);
         $client->request('GET', $nextPageUrl);
         $nextPageContent = json_decode($client->getResponse()->getContent(), true);
         $vacancies = $nextPageContent['data'];
         if (count($vacancies)) {
-            $this->page++;
+            ++$this->page;
             $links = array_merge($links, $this->spot($nextPageUrl, $timestamp));
         }
 
@@ -106,11 +105,11 @@ class ProjobsScraperService extends AbstractScraperService
         $url_parts = explode('/', $url);
         $id = end($url_parts);
 
-        return self::API_URL . "/$id";
+        return self::API_URL."/$id";
     }
 
     private function makeWebUrl($id): string
     {
-        return self::WEB_URL . "/$id";
+        return self::WEB_URL."/$id";
     }
 }

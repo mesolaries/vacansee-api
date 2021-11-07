@@ -2,7 +2,6 @@
 
 namespace App\DependencyInjection\Compiler;
 
-
 use App\Service\Scraper\ScraperChainService;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -10,9 +9,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ScraperCompilerPass implements CompilerPassInterface
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)
     {
@@ -34,7 +32,7 @@ class ScraperCompilerPass implements CompilerPassInterface
                     'addScraper',
                     [
                         new Reference($id),
-                        $attributes['alias']
+                        $attributes['alias'],
                     ]
                 );
             }

@@ -2,7 +2,6 @@
 
 namespace App\Service\Scraper\Providers;
 
-
 use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
@@ -28,7 +27,7 @@ class HellojobazScraperService extends AbstractScraperService
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * Due to not existence of proper date text and date filter working only with today's vacancies
      */
@@ -89,7 +88,7 @@ class HellojobazScraperService extends AbstractScraperService
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function scrape(string $url, Category $category)
     {
@@ -100,12 +99,12 @@ class HellojobazScraperService extends AbstractScraperService
         $title = $crawler->filter('div.ei_name_andsalary h3')->first()->text();
         $company = $crawler->filter('p.company_name')->first()->text();
         $salary = $crawler->filter('div.ei_name_andsalary span.salary')->first()->text();
-        $salary = (int)$salary ? $salary : null;
+        $salary = (int) $salary ? $salary : null;
 
         $description_node = $crawler->filter('div.elan_inner_desc');
 
-        $description = $description_node->first()->text() . $description_node->last()->text();
-        $description_html = $description_node->first()->html() . $description_node->last()->html();
+        $description = $description_node->first()->text().$description_node->last()->text();
+        $description_html = $description_node->first()->html().$description_node->last()->html();
 
         $datetime = new \DateTime();
 

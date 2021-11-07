@@ -26,7 +26,6 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
-
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -44,7 +43,7 @@ class UserCrudController extends AbstractCrudController
         $user = new User();
         $user->setApiKey(Uuid::uuid1());
         $user->setPassword($this->encoder->encodePassword($user, $user->getApiKey()));
+
         return $user;
     }
-
 }

@@ -5,9 +5,7 @@ namespace App\Command;
 use App\Entity\Vacancy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -40,6 +38,7 @@ class VacancyClearCommand extends Command
 
         if (!$expiredVacancies) {
             $io->success("There's no expired vacancies.");
+
             return 0;
         }
 
@@ -49,7 +48,7 @@ class VacancyClearCommand extends Command
 
         $this->em->flush();
 
-        $io->success('Successfully removed ' . count($expiredVacancies) . ' expired vacancies.');
+        $io->success('Successfully removed '.count($expiredVacancies).' expired vacancies.');
 
         return 0;
     }

@@ -80,7 +80,7 @@ class BossazScraperService extends AbstractScraperService
         $title = $crawler->filter('.post-title')->first()->text();
         $company = $crawler->filter('.post-company')->first()->filter('a')->text();
         $salary = $crawler->filter('.post-salary.salary')->first()->text();
-        $salary = (int)$salary ? $salary : null;
+        $salary = (int) $salary ? $salary : null;
         $description = $crawler->filter('.post-cols.post-info')->first()->text();
         $description_html = $crawler->filter('.post-cols.post-info')->first()->html();
 

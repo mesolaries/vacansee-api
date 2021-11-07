@@ -46,7 +46,7 @@ class AdminDashboardController extends AbstractDashboardController
         return UserMenu::new()
             ->displayUserName()
             ->displayUserAvatar()
-            ->setName(method_exists($user, '__toString') ? (string)$user : $user->getUsername())
+            ->setName(method_exists($user, '__toString') ? (string) $user : $user->getUsername())
             ->setAvatarUrl(null)
             ->setMenuItems($userMenuItems);
     }

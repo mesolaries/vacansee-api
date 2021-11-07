@@ -46,7 +46,7 @@ class RabotaazScraperService extends AbstractScraperService
         foreach ($nodes as $node) {
             $node = new Crawler($node, self::BASE_URL);
 
-            $link = self::BASE_URL . $node->attr('href');
+            $link = self::BASE_URL.$node->attr('href');
 
             if ($vacancyRepository->findOneBy(['url' => $link])) {
                 return $links;
@@ -76,7 +76,7 @@ class RabotaazScraperService extends AbstractScraperService
         $title = $crawler->filter('.title- h1')->first()->text();
         $company = $crawler->filter('.employer-')->first()->filter('b')->text();
         $salary = $crawler->filter('.salary-')->first()->text();
-        $salary = (int)$salary ? $salary : null;
+        $salary = (int) $salary ? $salary : null;
 
         // Remove child node from description with similar vacancies
         $crawler->filter('.details-')->children()->each(
