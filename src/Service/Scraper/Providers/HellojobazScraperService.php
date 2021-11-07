@@ -43,7 +43,7 @@ class HellojobazScraperService extends AbstractScraperService
             $pagination = $pagination->nextAll();
         }
 
-        $nodes = $crawler->evaluate('/html/body/main/div[6]/div[3]/div/div[3]/div');
+        $nodes = $crawler->evaluate('/html/body/main/div[8]/div/div/div[2]/div');
 
         if (!$nodes->count()) {
             $nodes = $crawler->evaluate('/html/body/main/div[4]/div[3]/div/div[2]/div');
