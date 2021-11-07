@@ -63,7 +63,7 @@ class HellojobazScraperService extends AbstractScraperService
 
             $link = $client->click($link)->getUri();
 
-            $date_row = $crawler->filter('div.elan_inner_specs.only_vacancy_specs ul li');
+            $date_row = $crawler->filter('div.companies_inner_infobar div.company_details ul li');
 
             $date = $date_row->eq($date_row->count() - 3)->filter('span')->text();
 
