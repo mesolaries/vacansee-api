@@ -37,7 +37,6 @@ class Vacancy
         'medical' => 'Səhiyyə',
         'legal' => 'Hüquq',
         'education' => 'Təhsil',
-        'jobsearch' => 'Jobsearch',
         'other' => 'Digər',
     ];
 

@@ -6,7 +6,7 @@ Supported websites:
 
 - [x] https://boss.az
 - [x] https://www.hellojob.az
-- [x] http://jobsearch.az
+- [x] https://jobsearch.az
 - [x] https://www.offer.az
 - [x] https://projobs.az
 - [x] https://www.rabota.az

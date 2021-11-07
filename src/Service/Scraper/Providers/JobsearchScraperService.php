@@ -5,15 +5,26 @@ namespace App\Service\Scraper\Providers;
 use App\Entity\Category;
 use App\Entity\Vacancy;
 use App\Service\Scraper\AbstractScraperService;
+use Carbon\Carbon;
 use Goutte\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
 class JobsearchScraperService extends AbstractScraperService
 {
-    private const BASE_URL = 'https://jobsearch.az';
+    private const WEB_URL = 'https://jobsearch.az/vacancies';
+    private const API_URL = 'https://jobsearch.az/api-az/vacancies-az';
 
     protected const CATEGORIES_URLS = [
-        'jobsearch' => 'https://jobsearch.az',
+        'it' => self::API_URL.'?categories=1076',
+        'design' => self::API_URL.'?categories=886',
+        'marketing' => self::API_URL.'?categories=1288',
+        'administration' => self::API_URL.'?categories=850',
+        'sales' => self::API_URL.'?categories=1411',
+        'finance' => self::API_URL.'?categories=1263',
+        'medical' => self::API_URL.'?categories=937',
+        'legal' => self::API_URL.'?categories=1375',
+        'education' => self::API_URL.'?categories=1004',
+        'other' => self::API_URL,
     ];
 
     /**
@@ -23,31 +34,38 @@ class JobsearchScraperService extends AbstractScraperService
     {
         $client = new Client();
 
-        $crawler = $client->request('GET', $url);
+        // Adds X-Requested-With header
+        $client->xmlHttpRequest('GET', $url);
+
+        $content = json_decode($client->getResponse()->getContent(), true);
+
+        $vacancies = $content['items'];
 
         $links = [];
 
         $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
 
-        $vacancies = $crawler->filter('table.hotvac')
-            ->first()
-            ->filter('tr')
-            ->nextAll();
-
         foreach ($vacancies as $vacancy) {
-            $vacancy = new Crawler($vacancy, self::BASE_URL);
+            $createdAt = strtotime($vacancy['created_at']);
+            $link = $this->makeWebUrl($vacancy['slug']);
+            $isVip = $vacancy['is_vip'];
 
-            $date = $vacancy->filter('td.date_text')->first()->text();
-            $link = $vacancy->filter('a.hotv_text')->first()->link()->getUri();
+            if ($createdAt <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
+                if ($isVip) {
+                    continue;
+                }
 
-            if (strtotime($date) <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
                 return $links;
             }
 
             $links[] = $link;
         }
 
-        return $links;
+        if (array_key_exists('next', $content)) {
+            $links = array_merge($links, $this->spot($content['next'], $timestamp));
+        }
+
+        return array_unique($links);
     }
 
     /**
@@ -57,55 +75,41 @@ class JobsearchScraperService extends AbstractScraperService
     {
         $client = new Client();
 
-        $crawler = $client->request('GET', $url);
+        $url = $this->makeApiUrl($url);
 
-        $title = $crawler
-            ->evaluate(
-                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[1]/td'
-            )
-            ->html();
-        $title = trim(explode('</span>', $title)[1]);
+        $client->xmlHttpRequest('GET', $url);
 
-        $company = $crawler
-            ->evaluate(
-                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[2]/td[1]'
-            )
-            ->html();
-        $company = trim(explode('</span>', $company)[1]);
+        $content = json_decode($client->getResponse()->getContent(), true);
 
-        $description = $crawler
-            ->evaluate(
-                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
-            )
-            ->text();
-
-        $description_html = $crawler
-            ->evaluate(
-                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[4]/td[2]/table/tr/td'
-            )
-            ->html();
-
-        $date = $crawler
-            ->evaluate(
-                '/html/body/table/tr[3]/td/table/tr/td[2]/table/tr/td[1]/table/tr[3]/td/table/tr[2]/td[2]/table/tr[3]/td[1]'
-            )
-            ->html();
-        $date = trim(explode('</span>', $date)[1]);
-
+        $createdAt = strtotime($content['created_at']);
         $datetime = new \DateTime();
-        $datetime->setTimestamp(strtotime($date));
+        $datetime->setTimestamp($createdAt);
 
         $vacancy = new Vacancy();
 
-        $vacancy->setTitle($title);
-        $vacancy->setCompany($company);
-        $vacancy->setDescription($description);
-        $vacancy->setDescriptionHtml($description_html);
-        $vacancy->setCategory($category);
-        $vacancy->setUrl($url);
-        $vacancy->setCreatedAt($datetime);
+        $vacancy
+            ->setTitle($content['title'])
+            ->setCompany($content['company']['title'])
+            ->setDescription(strip_tags($content['text']))
+            ->setDescriptionHtml($content['text'])
+            ->setCategory($category)
+            ->setUrl($this->makeWebUrl($content['slug']))
+            ->setCreatedAt($datetime);
 
         $this->getEntityManager()->persist($vacancy);
         $this->getEntityManager()->flush();
+    }
+
+    private function makeApiUrl(string $url): string
+    {
+        $url_parts = explode('/', $url);
+        $slug = end($url_parts);
+
+        return self::API_URL."/$slug";
+    }
+
+    private function makeWebUrl(string $slug): string
+    {
+        return self::WEB_URL."/$slug";
     }
 }
