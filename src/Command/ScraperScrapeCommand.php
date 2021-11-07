@@ -24,7 +24,7 @@ class ScraperScrapeCommand extends Command
     private EntityManagerInterface $em;
 
     // Data published interval (-1 day = Scrape data published today)
-    private const INTERVAL = '-2 days';
+    private const INTERVAL = '-1 day';
 
     public function __construct(ScraperChainService $chain, EntityManagerInterface $em, string $name = null)
     {
