@@ -41,7 +41,7 @@ class OfferazScraperService extends AbstractScraperService
             $pagination = $pagination->last()->nextAll();
         }
 
-        $nodes = $crawler->filter('#last_posts div.container.cards a.card');
+        $nodes = $crawler->filter('#last_posts div.container div.cards a.card');
 
         $links = [];
 
@@ -65,7 +65,7 @@ class OfferazScraperService extends AbstractScraperService
             $links[] = $link;
         }
 
-        // If it's the last page, it shouldn't have a pagination link or it may have a special class
+        // If it's the last page, it shouldn't have a pagination link, or it may have a special class
         if ($pagination->count()) {
             $nextPageUrl = $client->click($pagination->first()->link())->getUri();
             $links = array_merge($links, $this->spot($nextPageUrl, $timestamp));
