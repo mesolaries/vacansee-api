@@ -10,9 +10,10 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(collectionOperations={"get"}, itemOperations={"get"}, attributes={"order"={"id": "ASC"}})
+ * @ApiResource(collectionOperations={"get"}, itemOperations={"get"}, attributes={"order"={"id": "ASC"}, "normalization_context"={"groups": {"read"}}})
  * @ApiFilter(OrderFilter::class, properties={"id", "name", "slug"})
  * @ApiFilter(DateFilter::class, properties={"vacancies.createdAt"})
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -24,16 +25,19 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("read")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups("read")
      */
     private $slug;
 
