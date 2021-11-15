@@ -28,6 +28,7 @@ class BossazScraperService extends AbstractScraperService
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Exception
      */
     public function spot(string $url, int $timestamp): array
@@ -52,7 +53,7 @@ class BossazScraperService extends AbstractScraperService
             $date = $crawler->filter('.bumped_on.params-i-val')->text();
             $link = $crawler->filter('a.lang-switcher.az')->link();
             $link = $client->click($link)->getUri();
-            
+
             $date = new \DateTime($date, new \DateTimeZone('Asia/Baku'));
             $date->setTimezone(new \DateTimeZone('UTC'));
 

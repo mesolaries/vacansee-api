@@ -28,6 +28,7 @@ class OfferazScraperService extends AbstractScraperService
 
     /**
      * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function spot(string $url, int $timestamp): array
