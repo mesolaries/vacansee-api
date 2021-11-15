@@ -11,9 +11,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\VacancyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
- * @ApiResource(collectionOperations={"get"}, itemOperations={"get"}, attributes={"order"={"createdAt": "DESC"}})
+ * @ApiResource(collectionOperations={"get"}, itemOperations={"get"}, attributes={"order"={"createdAt": "DESC"}, "normalization_context"={"groups": {"read"}}})
  * @ApiFilter(SearchFilter::class, properties={"title": "ipartial", "company": "ipartial", "salary": "iword_start",
  *                                 "url": "ipartial", "category.id": "exact", "category.slug": "exact"})
  * @ApiFilter(DateFilter::class, properties={"createdAt"})
@@ -44,52 +46,62 @@ class Vacancy
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("read")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("read")
      */
     private $company;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("read")
      */
     private $salary;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups("read")
      */
     private $url;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("read")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("read")
      */
     private $description;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("read")
      */
     private $descriptionHtml;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="vacancies")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("read")
      */
     private $category;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("read")
      */
     private $expiresAt;
 
@@ -185,6 +197,15 @@ class Vacancy
     public function getCategory(): ?Category
     {
         return $this->category;
+    }
+
+    /**
+     * @Groups("read")
+     * @SerializedName("categorySlug")
+     */
+    public function getCategorySlug(): ?string
+    {
+        return $this->getCategory()->getSlug();
     }
 
     public function setCategory(?Category $category): self
