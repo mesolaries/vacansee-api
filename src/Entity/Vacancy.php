@@ -199,15 +199,6 @@ class Vacancy
         return $this->category;
     }
 
-    /**
-     * @Groups("read")
-     * @SerializedName("categorySlug")
-     */
-    public function getCategorySlug(): ?string
-    {
-        return $this->getCategory()->getSlug();
-    }
-
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
