@@ -28,6 +28,7 @@ class OfferazScraperService extends AbstractScraperService
 
     /**
      * {@inheritDoc}
+     * @throws Exception
      */
     public function spot(string $url, int $timestamp): array
     {
@@ -55,10 +56,12 @@ class OfferazScraperService extends AbstractScraperService
             preg_match('/\d{2}\.\d{2}\.\d{4}/', $dateText, $matches);
 
             $date = $matches[0];
+            $date = new \DateTime($date, new \DateTimeZone('Asia/Baku'));
+            $date->setTimezone(new \DateTimeZone('UTC'));
 
             $link = $node->link()->getUri();
 
-            if (strtotime($date) <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
+            if ($date->getTimestamp() <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
                 return $links;
             }
 

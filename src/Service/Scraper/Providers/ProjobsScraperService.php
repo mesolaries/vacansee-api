@@ -46,7 +46,7 @@ class ProjobsScraperService extends AbstractScraperService
         $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
 
         foreach ($vacancies as $vacancy) {
-            $created_at = strtotime($vacancy['createdAt']) + date('Z');
+            $created_at = strtotime($vacancy['createdAt']); // Date is already in UTC
             $link = $this->makeWebUrl($vacancy['id']);
 
             if ($created_at <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
@@ -81,7 +81,7 @@ class ProjobsScraperService extends AbstractScraperService
         $content = json_decode($client->getResponse()->getContent(), true);
         $data = $content['data'];
 
-        $created_at = strtotime($data['createdAt']) + date('Z');
+        $created_at = strtotime($data['createdAt']); // Date is already in UTC
         $datetime = new \DateTime();
         $datetime->setTimestamp($created_at);
 

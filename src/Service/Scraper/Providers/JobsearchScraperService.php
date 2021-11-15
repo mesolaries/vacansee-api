@@ -27,6 +27,7 @@ class JobsearchScraperService extends AbstractScraperService
 
     /**
      * {@inheritDoc}
+     * @throws \Exception
      */
     public function spot(string $url, int $timestamp): array
     {
@@ -44,11 +45,13 @@ class JobsearchScraperService extends AbstractScraperService
         $vacancyRepository = $this->getEntityManager()->getRepository(Vacancy::class);
 
         foreach ($vacancies as $vacancy) {
-            $createdAt = strtotime($vacancy['created_at']);
+            $createdAt = new \DateTime($vacancy['created_at'], new \DateTimeZone('Asia/Baku'));
+            $createdAt->setTimezone(new \DateTimeZone('UTC'));
+
             $link = $this->makeWebUrl($vacancy['slug']);
             $isVip = $vacancy['is_vip'];
 
-            if ($createdAt <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
+            if ($createdAt->getTimestamp() <= $timestamp || $vacancyRepository->findOneBy(['url' => $link])) {
                 if ($isVip) {
                     continue;
                 }
