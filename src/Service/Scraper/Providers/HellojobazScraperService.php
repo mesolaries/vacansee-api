@@ -65,9 +65,13 @@ class HellojobazScraperService extends AbstractScraperService
 
             $date_row = $crawler->filter('div.companies_inner_infobar div.company_details ul li');
 
-            $date = $date_row->eq($date_row->count() - 3)->filter('span')->text();
+            $date_row = $date_row->reduce(function ($node, $i) {
+                return false !== mb_strpos(mb_strtolower($node->text()), 'elan tarixi');
+            });
 
-            if (false === mb_strpos(mb_strtolower($date), 'bu gün') ||
+            $date = $date_row->filter('p')->text();
+
+            if (false === mb_strpos(mb_strtolower($date), 'bugün') ||
                 $vacancyRepository->findOneBy(['url' => $link])) {
                 return $links;
             }
@@ -75,7 +79,7 @@ class HellojobazScraperService extends AbstractScraperService
             $links[] = $link;
         }
 
-        // If it's the last page, it shouldn't have a pagination link or it may have a special class
+        // If it's the last page, it shouldn't have a pagination link, or it may have a special class
         if ($pagination->count()) {
             $nextPageUrl = $client->click(
                 $pagination->eq(0)->children('a.page-link')->link()
@@ -96,9 +100,9 @@ class HellojobazScraperService extends AbstractScraperService
 
         $crawler = $client->request('GET', $url);
 
-        $title = $crawler->filter('div.ei_name_andsalary h3')->first()->text();
-        $company = $crawler->filter('p.company_name')->first()->text();
-        $salary = $crawler->filter('div.ei_name_andsalary span.salary')->first()->text();
+        $title = $crawler->filter('div.eih_name_and_premium h1')->first()->text();
+        $company = $crawler->filter('a.eih_company h2.company_name')->first()->text();
+        $salary = $crawler->filter('span.salary')->first()->text();
         $salary = (int) $salary ? $salary : null;
 
         $description_node = $crawler->filter('div.elan_inner_desc');
